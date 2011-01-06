@@ -1,0 +1,10 @@
+{
+  "database": { 
+      "data_source": "dbi:mysql:database=pdns;host=localhost;mysql_enable_utf8=1",
+      "user": "not-root",
+      "password": "",
+  },
+
+}
+
+
