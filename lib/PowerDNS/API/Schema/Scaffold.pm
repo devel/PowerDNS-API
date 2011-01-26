@@ -21,5 +21,12 @@ override column_components => sub {
     return @components;
 };
 
+override table_components => sub {
+    my ($self, $table) = @_;
+    my @components = super;
+    push @components, 'Helper::Row::ToJSON';
+    return @components;
+};
+
 1;
 
