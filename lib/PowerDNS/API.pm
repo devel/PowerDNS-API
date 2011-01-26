@@ -1,8 +1,13 @@
 package PowerDNS::API;
-use strict;
-use warnings;
+use Dancer ':syntax';
 
-1;
+our $VERSION = '0.1';
+
+get '/' => sub {
+    template 'index';
+};
+
+true;
 
 __END__
 
@@ -10,20 +15,10 @@ __END__
 
 =head1 NAME
 
-PowerDNS::API -
-
-=head1 SYNOPSIS
-
-
+PowerDNS::API - HTTP API to PowerDNS Data
+ 
 =head1 DESCRIPTION
 
-=head1 METHODS
-
-=over4
-
-=item ...
-
-=back
 
 =head1 AUTHOR
 
@@ -44,8 +39,5 @@ Copyright 2011 Ask Bjørn Hansen, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
-
-=cut
-
 
 =cut
