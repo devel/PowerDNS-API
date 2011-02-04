@@ -1,9 +1,23 @@
 package PowerDNS::API;
 use Dancer ':syntax';
+use PowerDNS::API::Handler::API;
 
 our $VERSION = '0.1';
 
+set 'logger' => 'console';
+set 'log' => 'debug';
+set 'show_errors' => 1;
+set 'access_log' => 1;
+set 'warnings' => 1;
+
+set plack_middlewares => [
+   [ 'Deflater' ],
+];
+
+prefix undef;
+
 get '/' => sub {
+    debug "main index!";
     template 'index';
 };
 
