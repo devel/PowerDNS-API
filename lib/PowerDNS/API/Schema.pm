@@ -32,4 +32,19 @@ sub dbh {
 }
 
 
+package PowerDNS::API::Schema::Account;
+use strict;
+
+sub store_column {
+    my ( $self, $name, $value ) = @_;
+    if ($name eq 'password') {
+        my $csh = Crypt::SaltedHash->new(algorithm => 'SHA-1');
+        $csh->add($value);
+        $value = $csh->generate;
+    }
+    $self->next::method($name, $value);
+}
+
+
+
 1;

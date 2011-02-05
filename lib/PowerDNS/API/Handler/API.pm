@@ -4,13 +4,9 @@ use Moose;
 extends 'PowerDNS::API::Handler';
 
 use JSON qw(encode_json);
-use PowerDNS::API::Schema;
 use namespace::clean;
 
-my $_schema;
-sub schema {
-    return $_schema ||= PowerDNS::API::Schema->new;
-}
+sub schema { return PowerDNS::API::schema() }
 
 prefix '/api';
 

@@ -1,6 +1,7 @@
 package PowerDNS::API;
 use Dancer ':syntax';
 use PowerDNS::API::Handler::API;
+use PowerDNS::API::Schema;
 
 our $VERSION = '0.1';
 
@@ -12,9 +13,22 @@ set 'warnings' => 1;
 
 set plack_middlewares => [
    [ 'Deflater' ],
+   [ 'Auth::Basic', authenticator => \&authenticate ],
 ];
 
 prefix undef;
+
+my $_schema;
+sub schema {
+    return $_schema ||= PowerDNS::API::Schema->new;
+}
+
+sub authenticate {
+    my ($username, $password) = @_;
+    my $user = schema->account->find({ name => $username });
+    return 1 if $user and $user->check_password($password);
+    return 0;
+}
 
 get '/' => sub {
     debug "main index!";

@@ -11,7 +11,13 @@ use lib 't';
 use TestUtils;
 
 my $domain = "abc-" . time . "-". int(rand(9)) . ".test";
+my $accountname = 'test.' . time;
+my $password = rand;
+
 my $slave_domain = "slave-$domain";
+
+my $schema = PowerDNS::API::schema();
+ok(my $account = $schema->account->create({ name => $accountname, password => $password }), 'setup account');
 
 my $r;
 
@@ -73,7 +79,8 @@ ok($r = api_call(DELETE => "record/$domain/$id"), 'delete TXT record');
 
 $id = $r->{record}->{id};
 
-
 diag pp($r);
+
+$account->delete;
 
 done_testing();
