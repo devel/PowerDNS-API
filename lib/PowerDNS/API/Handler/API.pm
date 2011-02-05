@@ -14,7 +14,9 @@ set serializer => 'JSONC';
 
 use Dancer::Plugin::REST;
 
-get '/domain/:id?' => sub {
+get '/domain/:id?' => \&_get_domain;
+
+sub _get_domain {
 
     my $id = params->{id} || '';
     
@@ -42,7 +44,7 @@ get '/domain/:id?' => sub {
                      }
                     );
 
-};
+}
 
 sub _records {
     my ($domain, $options) = @_;
@@ -68,8 +70,8 @@ sub _soa_fields {
     return qw(primary hostmaster serial refresh retry expire default_ttl);
 }
 
-put '/domain/:domain' => sub {
-
+put '/domain/:domain' => \&_put_domain;
+sub _put_domain {
     my $name = params->{domain} or return status_bad_request();
     # check permissions
 
@@ -113,10 +115,11 @@ put '/domain/:domain' => sub {
       unless $domain->type eq 'SLAVE';
 
     return status_created({ domain => $domain });
+}
 
-};
 
-post '/domain/:domain' => sub {
+post '/domain/:domain' => \&_post_domain;
+sub _post_domain {
 
     my $domain_name = params->{domain} or return status_bad_request();
     
@@ -144,9 +147,11 @@ post '/domain/:domain' => sub {
     # TODO: commit
 
     return status_ok({ domain => $domain });
-};
+}
 
-put '/record/:domain/:id' => sub {
+put '/record/:domain/:id' => \&_put_record;
+
+sub _put_record {
     my $domain_name = params->{domain} or return status_bad_request();
     my $record_id   = params->{id} or return status_bad_request("record id required");
 
@@ -168,9 +173,11 @@ put '/record/:domain/:id' => sub {
 
     return status_accepted( { record => $record, domain => $domain } );
 
-};
+}
 
-post '/record/:domain' => sub {
+post '/record/:domain' => \&_post_record;
+
+sub _post_record {
 
     # check permissions
     
@@ -205,7 +212,9 @@ post '/record/:domain' => sub {
 
 };
 
-del '/record/:domain/:id' => sub {
+del '/record/:domain/:id' => \&_del_record;
+
+sub _del_record {
 
     my $domain_name = params->{domain} or return status_bad_request();
     my $record_id   = params->{id} or return status_bad_request("record id required");
@@ -222,6 +231,6 @@ del '/record/:domain/:id' => sub {
 
     return status_ok({ message => "record deleted", domain => $domain });
 
-};
+}
 
 1;
