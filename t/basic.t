@@ -48,7 +48,9 @@ ok($r = api_call(PUT => "domain/$domain"), 'setup the same domain again');
 is($r->{r}->{status}, 409, 'domain already exists');
 like($r->{error}, qr/domain exists/, 'got error message');
 
-# TODO: test that domain can't be accessed from another account
+ok($r = api_call(GET => "domain/$domain", { user => $account2 }), "Get domain from account2");
+is($r->{r}->{status}, 401, 'unauthorized');
+is($r->{error}, 'unauthorized', 'got error');
 
 ok($r = api_call(GET => "domain/$domain"), "Get domain");
 ok($r->{domain}, "got domain back");
