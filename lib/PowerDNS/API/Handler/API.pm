@@ -43,7 +43,7 @@ sub _get_domain {
       unless $account->has_access( $domain );
 
     return status_ok({ domain => $domain,
-                       records => _records($domain)
+                       records => _records($domain, scalar params)
                      }
                     );
 
