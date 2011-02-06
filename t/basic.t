@@ -7,6 +7,8 @@ use Data::Dump qw(pp);
 require PowerDNS::API;
 use Dancer::Test;
 
+$Carp::Verbose = 1;
+
 use lib 't';
 use TestUtils;
 
@@ -17,24 +19,36 @@ my $password = rand;
 my $slave_domain = "slave-$domain";
 
 my $schema = PowerDNS::API::schema();
-ok(my $account = $schema->account->create({ name => $accountname, password => $password }), 'setup account');
+ok(my $account  = $schema->account->create({ name => $accountname, password => $password }), 'setup account');
+ok(my $account2 = $schema->account->create({ name => "$accountname-b", password => "$password-b" }), 'setup account 2');
+
+$P::current_user = $account; 
 
 my $r;
 
-ok($r = api_call(PUT => "domain/$slave_domain", { type => 'slave' } ), 'setup new slave domain, no master');
+ok($r = api_call(GET => "domain/", { user => $account->name } ), 'get list of domains');
+is($r->{domains} && scalar @{ $r->{domains} }, 0, 'empty list');
+
+ok($r = api_call(PUT => "domain/$slave_domain", { type => 'slave', user => $account } ), 'setup new slave domain, no master');
 is($r->{r}->{status}, 400, 'master parameter required');
 
-ok($r = api_call(PUT => "domain/$slave_domain", { type => 'slave', master => '127.0.0.2' } ),
+ok($r = api_call(PUT => "domain/$slave_domain", { type => 'slave', master => '127.0.0.2', user => $account } ),
        'setup new slave domain');
 is($r->{r}->{status}, 201, 'ok, created');
 
-ok($r = api_call(PUT => "domain/$domain"), 'setup new domain');
+ok($r = api_call(PUT => "domain/$domain", { user => $account }), 'setup new domain');
 is($r->{r}->{status}, 201, 'ok, created');
 # diag pp($r);
+
+ok($r = api_call(GET => "domain/", { user => $account } ), 'get list of domains');
+diag pp($r);
+is($r->{domains} && scalar @{ $r->{domains} }, 2, 'two domains in the list');
 
 ok($r = api_call(PUT => "domain/$domain"), 'setup the same domain again');
 is($r->{r}->{status}, 409, 'domain already exists');
 like($r->{error}, qr/domain exists/, 'got error message');
+
+# TODO: test that domain can't be accessed from another account
 
 ok($r = api_call(GET => "domain/$domain"), "Get domain");
 ok($r->{domain}, "got domain back");
@@ -43,6 +57,8 @@ is($r->{domain}->{type}, 'MASTER', 'new domain got setup as master');
 
 ok($r = api_call(POST => "domain/$domain", { type => 'slave', master => '127.0.0.3' }), "Change domain to be SLAVE");
 is($r->{domain}->{type}, 'SLAVE', 'now slave');
+
+# TODO: test that domain can't be edited from another account
 
 ok($r = api_call(POST => "domain/$domain", { type => 'master' }), "Change domain back to be master");
 is($r->{domain}->{type}, 'MASTER', 'now master');
@@ -76,11 +92,11 @@ is($r->{record}->{ttl}, 600, 'correct TTL');
 
 ok($r = api_call(DELETE => "record/$domain/$id"), 'delete TXT record');
 
-
 $id = $r->{record}->{id};
 
 diag pp($r);
 
 $account->delete;
+$account2->delete;
 
 done_testing();

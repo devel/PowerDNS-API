@@ -2,8 +2,7 @@ package PowerDNS::API;
 use Dancer ':syntax';
 use PowerDNS::API::Handler::API;
 use PowerDNS::API::Schema;
-
-our $VERSION = '0.1';
+use Data::Dump ();
 
 set 'logger' => 'console';
 set 'log' => 'debug';
@@ -16,12 +15,20 @@ set plack_middlewares => [
    [ 'Auth::Basic', authenticator => \&authenticate ],
 ];
 
-prefix undef;
-
 my $_schema;
 sub schema {
     return $_schema ||= PowerDNS::API::Schema->new;
 }
+
+prefix undef;
+
+before sub {
+    my $username = request->{env}->{REMOTE_USER};
+    return unless $username;
+    my $account = schema->account->find({ name => $username })
+      or return;
+    var account => $account;
+};
 
 sub authenticate {
     my ($username, $password) = @_;
@@ -31,7 +38,7 @@ sub authenticate {
 }
 
 get '/' => sub {
-    debug "main index!";
+    my $r = request;
     template 'index';
 };
 

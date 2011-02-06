@@ -16,7 +16,10 @@ sub fake_request($$;$) {
     if ($params) {
         $req->_set_body_params($params);
     }
-    #  Test::More::diag "REQ: ", Data::Dump::pp($req);
+    if (my $user = delete $params->{user} || $P::current_user ) {
+        $req->{env}->{REMOTE_USER} = ref $user ? $user->name : $user;
+    }
+    # Test::More::diag "REQ: ", Data::Dump::pp($req);
     return $req;
 }
 

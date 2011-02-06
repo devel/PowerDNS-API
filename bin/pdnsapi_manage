@@ -1,0 +1,27 @@
+#!/usr/bin/env perl
+use strict;
+use local::lib;
+use lib 'lib';
+use lib '../Dancer/lib';
+use Dancer::Test;
+
+use PowerDNS::API::Schema;
+
+my $schema = PowerDNS::API::Schema->new;
+
+my ($user, $password) = @ARGV;
+die "$0 [user] [password]\n" unless $password;
+
+# look for account & update 
+
+my $account = $schema->account->find({ name => $user });
+
+if ($account) {
+    $account->password($password);
+    $account->update;
+    print "Account updated\n";
+}
+else {
+    $schema->account->create({ name => $user, password => $password });
+    print "Account created\n";
+}

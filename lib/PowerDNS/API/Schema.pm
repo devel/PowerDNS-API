@@ -45,6 +45,4 @@ sub store_column {
     $self->next::method($name, $value);
 }
 
-
-
 1;

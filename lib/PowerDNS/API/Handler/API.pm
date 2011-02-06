@@ -15,8 +15,9 @@ set serializer => 'JSONC';
 use Dancer::Plugin::REST;
 
 get '/domain/:id?' => \&_get_domain;
-
 sub _get_domain {
+
+    my $account = vars->{account} or return status_unauthorized("unauthorized");
 
     my $id = params->{id} || '';
     
@@ -26,8 +27,7 @@ sub _get_domain {
     }
 
     if ($id eq '') {
-        # TODO: only do the appropriate accounts
-        my $domains = schema->domain->search();
+        my $domains = schema->domain->search({ account => $account->name });
         my $data = [];
         while (my $domain = $domains->next) {
             push @$data, $domain;
@@ -38,6 +38,9 @@ sub _get_domain {
     # we're just working on one domain
     my $domain = schema->domain->find({ name => $id })
       or return status_not_found("domain doesn't exist");
+
+    return status_unauthorized("unauthorized")
+      unless $account->has_access( $domain );
 
     return status_ok({ domain => $domain,
                        records => _records($domain)
@@ -72,6 +75,9 @@ sub _soa_fields {
 
 put '/domain/:domain' => \&_put_domain;
 sub _put_domain {
+
+    my $account = vars->{account} or return status_unauthorized("unauthorized");
+
     my $name = params->{domain} or return status_bad_request();
     # check permissions
 
@@ -94,6 +100,8 @@ sub _put_domain {
         return status_bad_request('master parameter required for slave domains')
           unless $data->{master};
     }
+
+    $data->{account} = $account->name;
 
     my $domain = schema->domain->create($data);
 
@@ -121,12 +129,15 @@ sub _put_domain {
 post '/domain/:domain' => \&_post_domain;
 sub _post_domain {
 
+    my $account = vars->{account} or return status_unauthorized("unauthorized");
+
     my $domain_name = params->{domain} or return status_bad_request();
-    
-    # check permissions
 
     my $domain = schema->domain->find({ name => $domain_name })
       or return status_not_found("domain not found");
+
+    return status_unauthorized("unauthorized")
+      unless $account->has_access($domain);
 
     # TODO: start transaction
 
@@ -152,11 +163,16 @@ sub _post_domain {
 put '/record/:domain/:id' => \&_put_record;
 
 sub _put_record {
+    my $account = vars->{account} or return status_unauthorized("unauthorized");
+
     my $domain_name = params->{domain} or return status_bad_request();
     my $record_id   = params->{id} or return status_bad_request("record id required");
 
     my $domain = schema->domain->find({ name => $domain_name })
       or return status_not_found("domain not found");
+
+    return status_unauthorized("unauthorized")
+      unless $account->has_access($domain);
 
     my $record = schema->record->find({ id => $record_id, domain_id => $domain->id })
       or return status_not_found("record not found");
@@ -176,15 +192,17 @@ sub _put_record {
 }
 
 post '/record/:domain' => \&_post_record;
-
 sub _post_record {
 
-    # check permissions
+    my $account = vars->{account} or return status_unauthorized("unauthorized");
     
     my $domain_name = params->{domain} or return status_bad_request();
 
     my $domain = schema->domain->find({ name => $domain_name })
       or return status_not_found("domain not found");
+
+    return status_unauthorized("unauthorized")
+      unless $account->has_access($domain);
 
     for my $f (qw( type name content ) ) {
         defined params->{$f}
@@ -213,14 +231,17 @@ sub _post_record {
 };
 
 del '/record/:domain/:id' => \&_del_record;
-
 sub _del_record {
+    my $account = vars->{account} or return status_unauthorized("unauthorized");
 
     my $domain_name = params->{domain} or return status_bad_request();
     my $record_id   = params->{id} or return status_bad_request("record id required");
 
     my $domain = schema->domain->find({ name => $domain_name })
       or return status_not_found("domain not found");
+
+    return status_unauthorized("unauthorized")
+      unless $account->has_access($domain);
 
     my $record = schema->record->find({ id => $record_id, domain_id => $domain->id })
       or return status_not_found("record not found");

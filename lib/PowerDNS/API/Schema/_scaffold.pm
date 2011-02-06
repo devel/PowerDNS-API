@@ -85,6 +85,11 @@ has 'account' => (
     __PACKAGE__->set_primary_key(qw/ id /);
     __PACKAGE__->add_unique_constraint( api_key => [qw/ api_key /] );
     __PACKAGE__->add_unique_constraint( name    => [qw/ name /] );
+    __PACKAGE__->has_many(
+        domains => 'PowerDNS::API::Schema::Domain',
+        { 'foreign.account' => 'self.name' }
+    );
+    __PACKAGE__->many_to_many( 'records' => qw[ domains records ] );
     {
 
         package PowerDNS::API::Schema::ResultSet::Account;
@@ -166,6 +171,10 @@ has 'domain' => (
     );
     __PACKAGE__->set_primary_key(qw/ id /);
     __PACKAGE__->add_unique_constraint( name_index => [qw/ name /] );
+    __PACKAGE__->belongs_to(
+        account => 'PowerDNS::API::Schema::Account',
+        { 'foreign.name' => 'self.account' }
+    );
     __PACKAGE__->has_many(
         records => 'PowerDNS::API::Schema::Record',
         { 'foreign.domain_id' => 'self.id' }
@@ -261,6 +270,7 @@ has 'record' => (
         { 'foreign.id' => 'self.domain_id' },
         { join_type    => 'left' }
     );
+    __PACKAGE__->many_to_many( 'account' => qw[ domain account ] );
     {
 
         package PowerDNS::API::Schema::ResultSet::Record;

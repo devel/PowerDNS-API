@@ -11,4 +11,13 @@ sub check_password {
     return 0;
 }
 
+sub has_access {
+    my ($self, $domain) = @_;
+
+    # return 1 if $self->is_admin;
+
+    return 1 if ($domain->account and $domain->account->id == $self->id );
+    return 0;
+}
+
 1;
