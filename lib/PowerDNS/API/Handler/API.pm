@@ -174,6 +174,9 @@ sub _put_record {
     return status_unauthorized("unauthorized")
       unless $account->has_access($domain);
 
+    return status_method_not_allowed("Can't modify a SLAVE domain")
+      if uc $domain->type eq 'SLAVE';
+
     my $record = schema->record->find({ id => $record_id, domain_id => $domain->id })
       or return status_not_found("record not found");
 
@@ -203,6 +206,9 @@ sub _post_record {
 
     return status_unauthorized("unauthorized")
       unless $account->has_access($domain);
+
+    return status_method_not_allowed("Can't modify a SLAVE domain")
+      if uc $domain->type eq 'SLAVE';
 
     for my $f (qw( type name content ) ) {
         defined params->{$f}
@@ -242,6 +248,9 @@ sub _del_record {
 
     return status_unauthorized("unauthorized")
       unless $account->has_access($domain);
+
+    return status_method_not_allowed("Can't modify a SLAVE domain")
+      if uc $domain->type eq 'SLAVE';
 
     my $record = schema->record->find({ id => $record_id, domain_id => $domain->id })
       or return status_not_found("record not found");
