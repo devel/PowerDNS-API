@@ -56,7 +56,7 @@ sub _records {
     my %args = map { $_ => $options->{$_} } grep { defined $options->{$_} } @args;
     
     if (defined $args{name}) {
-        $args{name} = $domain->clean_hostname( $args{name} );
+        $args{name} = $domain->clean_hostname($args{name});
     }
     
     my $records = schema->record->search({ %args,
