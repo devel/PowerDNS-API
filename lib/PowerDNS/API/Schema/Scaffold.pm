@@ -11,6 +11,9 @@ override column_info => sub {
         $info->{timezone} = 'UTC';
     }
 
+    $info->{is_serializable} = 0 
+      if $column->name =~ m/^(password|api_secret)$/;
+
     return $info;
 };
 
