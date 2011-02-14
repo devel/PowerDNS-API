@@ -92,11 +92,17 @@ ok( $r = api_call(
 ok($r->{record}->{id}, 'got an ID');
 is($r->{record}->{ttl}, 600, 'correct TTL');
 
+ok($r = api_call(GET => "domain/$domain", { type => 'A', name => 'www' }), "Get records with filter");
+ok($r->{domain}, "got domain back");
+is($r->{domain}->{name}, $domain, 'got the right domain');
+is($r->{records}->[0]->{name}, 'www', 'got the right record name');
+
+diag pp($r);
+
+
 ok($r = api_call(DELETE => "record/$domain/$id"), 'delete TXT record');
 
 $id = $r->{record}->{id};
-
-diag pp($r);
 
 $account->delete;
 $account2->delete;

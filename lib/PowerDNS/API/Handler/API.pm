@@ -63,7 +63,7 @@ sub _records {
                                            domain_id => $domain->id
                                          });
 
-    my $data = $records ? { records => [ $records->all ] } : undef;
+    my $data = $records ? [ $records->all ] : undef;
 
    return $data;
 
@@ -161,7 +161,6 @@ sub _post_domain {
 }
 
 put '/record/:domain/:id' => \&_put_record;
-
 sub _put_record {
     my $account = vars->{account} or return status_unauthorized("unauthorized");
 
@@ -198,7 +197,10 @@ post '/record/:domain' => \&_post_record;
 sub _post_record {
 
     my $account = vars->{account} or return status_unauthorized("unauthorized");
-    
+
+    use Data::Dump qw(pp);
+    debug ("foo: " . pp( { params => scalar params } ));
+
     my $domain_name = params->{domain} or return status_bad_request();
 
     my $domain = schema->domain->find({ name => $domain_name })
