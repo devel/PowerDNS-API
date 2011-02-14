@@ -73,7 +73,7 @@ sub _soa_fields {
     return qw(primary hostmaster serial refresh retry expire default_ttl);
 }
 
-put '/domain/:domain' => \&_put_domain;
+put '/domain/:domain?' => \&_put_domain;
 sub _put_domain {
 
     my $account = vars->{account} or return status_unauthorized("unauthorized");
@@ -126,7 +126,7 @@ sub _put_domain {
 }
 
 
-post '/domain/:domain' => \&_post_domain;
+post '/domain/:domain?' => \&_post_domain;
 sub _post_domain {
 
     my $account = vars->{account} or return status_unauthorized("unauthorized");
