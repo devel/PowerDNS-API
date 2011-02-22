@@ -57,6 +57,10 @@ ok($r->{domain}, "got domain back");
 is($r->{domain}->{name}, $domain, 'got the right domain');
 is($r->{domain}->{type}, 'MASTER', 'new domain got setup as master');
 
+ok($r = api_call(POST => "domain/$domain", { type => 'slave', master => '127.0.0.3', user => $account2 }),
+      "Change domain to be SLAVE with another account");
+is($r->{r}->{status}, 401, 'unauthorized');
+
 ok($r = api_call(POST => "domain/$domain", { type => 'slave', master => '127.0.0.3' }), "Change domain to be SLAVE");
 is($r->{domain}->{type}, 'SLAVE', 'now slave');
 
