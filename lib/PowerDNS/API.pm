@@ -15,9 +15,8 @@ set plack_middlewares => [
    [ 'Auth::Basic', authenticator => \&authenticate, realm => 'PowerDNS::API' ],
 ];
 
-my $_schema;
 sub schema {
-    return $_schema ||= PowerDNS::API::Schema->new;
+    return PowerDNS::API::Schema->instance;
 }
 
 prefix undef;

@@ -95,7 +95,6 @@ sub _put_domain {
         }
     }
 
-
     my $data = {};
     for my $f (qw(master type)) {
         $data->{$f} = params->{$f};

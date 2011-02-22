@@ -5,6 +5,18 @@ with 'PowerDNS::API::Schema::_scaffold';
 has '+dbic' =>
   (handles => [qw(txn_do txn_scope_guard txn_begin txn_commit txn_rollback)],);
 
+our $instance;
+
+sub instance { 
+    my $class = shift;
+    unless (@_) {
+        return $instance ||= $class->new;
+    }
+    else {
+        return $class->new(@_);
+    }
+}
+
 sub connect_args {
     (   sub {
             my $config = Dancer::setting("database");
