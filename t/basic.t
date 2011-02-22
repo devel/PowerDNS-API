@@ -22,7 +22,7 @@ my $schema = PowerDNS::API::schema();
 ok(my $account  = $schema->account->create({ name => $accountname, password => $password }), 'setup account');
 ok(my $account2 = $schema->account->create({ name => "$accountname-b", password => "$password-b" }), 'setup account 2');
 
-$P::current_user = $account; 
+$P::current_user = $account;
 
 my $r;
 
@@ -103,6 +103,13 @@ diag pp($r);
 ok($r = api_call(DELETE => "record/$domain/$id"), 'delete TXT record');
 
 $id = $r->{record}->{id};
+
+ok($r = api_call(PUT => "domain/sub2.$domain", { user => $account2 }), 'setup sub-domain with another account');
+is($r->{r}->{status}, 403, 'forbidden');
+
+ok($r = api_call(PUT => "domain/sub.$domain", { user => $account }), 'setup sub-domain with the same account');
+is($r->{r}->{status}, 201, 'created');
+
 
 $account->delete;
 $account2->delete;

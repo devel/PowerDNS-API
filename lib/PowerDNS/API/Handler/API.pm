@@ -86,6 +86,16 @@ sub _put_domain {
         return status_conflict("domain exists") if $domain;
     }
 
+    {
+        my $top_domain = $name;
+        while ($top_domain =~ s/.*?\.//) {
+            my $domain = schema->domain->find({ name => $top_domain });
+            return status_forbidden("subdomain of another account")
+              if $domain and $domain->account->name ne $account->name;
+        }
+    }
+
+
     my $data = {};
     for my $f (qw(master type)) {
         $data->{$f} = params->{$f};
