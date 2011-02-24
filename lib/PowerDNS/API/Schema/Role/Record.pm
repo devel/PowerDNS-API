@@ -1,13 +1,48 @@
 package PowerDNS::API::Schema::Role::Record;
 use Moose::Role;
+use Class::MOP;
 
 # http://doc.powerdns.com/types.html
 
-sub _parse_soa {
+my %types = (
+    'SOA' => 'PowerDNS::API::Schema::Record::SOA',
+);
+
+sub load_type_classes {
+    for my $class (values %types) {
+        Class::MOP::load_class($class);
+    }
+}
+
+around 'new' => sub {
+    my $orig = shift;
+    my $r = $orig->(@_);
+    Test::More::diag("R: $r");
+    if (my $class = $types{$r->type}) {
+        bless $r, $class
+    }
+    return $r;
+};
+
+around [ 'update', 'insert' ] => sub {
+    my $orig = shift;
     my $self = shift;
-    my %data;
-    @data{qw(primary hostmaster serial refresh retry expire default_ttl)} = split /\s+/, $self->content;
-    return \%data;
+    my $content = $self->format_content;
+    $self->content($content);
+    $orig->($self, @_);
+};
+
+has 'data' => (
+    is => 'ro',
+    lazy_build => 1,
+);
+
+sub _build_data {
+    shift->content;
+}
+
+sub format_content {
+    shift->data;
 }
 
 sub TO_JSON {

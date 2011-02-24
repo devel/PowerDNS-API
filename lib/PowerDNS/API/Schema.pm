@@ -43,6 +43,9 @@ sub dbh {
     shift->dbic->storage->dbh;
 }
 
+package PowerDNS::API::Schema::load_types;
+PowerDNS::API::Schema::Record->load_type_classes;
+
 
 package PowerDNS::API::Schema::Account;
 use strict;
