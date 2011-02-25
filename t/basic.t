@@ -12,15 +12,12 @@ $Carp::Verbose = 1;
 use lib 't';
 use TestUtils;
 
-my $domain = "abc-" . time . "-". int(rand(9)) . ".test";
-my $accountname = 'test.' . time;
-my $password = rand;
-
+my $domain = test_domain_name;
 my $slave_domain = "slave-$domain";
 
 my $schema = PowerDNS::API::schema();
-ok(my $account  = $schema->account->create({ name => $accountname, password => $password }), 'setup account');
-ok(my $account2 = $schema->account->create({ name => "$accountname-b", password => "$password-b" }), 'setup account 2');
+ok(my $account  = setup_user, 'setup account');
+ok(my $account2 = setup_user, 'setup account 2');
 
 $P::current_user = $account;
 

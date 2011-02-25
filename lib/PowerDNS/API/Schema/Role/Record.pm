@@ -17,7 +17,6 @@ sub load_type_classes {
 around 'new' => sub {
     my $orig = shift;
     my $r = $orig->(@_);
-    Test::More::diag("R: $r");
     if (my $class = $types{$r->type}) {
         bless $r, $class
     }

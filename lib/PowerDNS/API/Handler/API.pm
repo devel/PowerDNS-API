@@ -113,23 +113,7 @@ sub _put_domain {
     $data->{account} = $account->name;
 
     my $domain = schema->domain->create($data);
-
-    my $soa = { };
-
-    for my $s (_soa_fields()) {
-        $soa->{$s} = params->{$s};
-    }
-
-    my $soa_data = join " ", map { $soa->{$_} || '' } _soa_fields();
-
-    schema->record->create({ domain_id => $domain->id,
-                             name      => $domain->name,
-                             type      => 'SOA',
-                             content   => $soa_data,
-                             ttl       => 7200,
-                             change_date => time,
-                           })
-      unless $domain->type eq 'SLAVE';
+    $domain->soa( params ) unless $domain->type eq 'SLAVE';
 
     return status_created({ domain => $domain });
 }

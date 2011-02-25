@@ -4,6 +4,10 @@ extends 'PowerDNS::API::Schema::Record';
 
 my @soa_fields = qw(primary hostmaster serial refresh retry expire default_ttl);
 
+sub fields {
+    return @soa_fields;
+}
+
 sub _build_data {
     my $self = shift;
     my %data;

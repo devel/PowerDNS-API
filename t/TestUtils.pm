@@ -8,7 +8,21 @@ use Dancer::Config 'setting';
 use JSON qw(decode_json);
 
 @EXPORT =
-  qw(api_call fake_request get_response_for_request);
+  qw(setup_user test_domain_name api_call fake_request get_response_for_request);
+
+my $inc = 0;
+
+sub setup_user {
+    my $accountname = 'test.' . time . '.' . ++$inc;
+    my $password    = rand;
+    my $schema      = PowerDNS::API::schema();
+    my $account =
+      $schema->account->create({name => $accountname, password => $password});
+}
+
+sub test_domain_name {
+    return "abc-" . time . "-". int(rand(9)) . ".test";
+}
 
 sub fake_request($$;$) {
     my ($method, $path, $params) = @_;
