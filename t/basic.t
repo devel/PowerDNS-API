@@ -98,9 +98,6 @@ ok($r->{domain}, "got domain back");
 is($r->{domain}->{name}, $domain, 'got the right domain');
 is($r->{records}->[0]->{name}, 'www', 'got the right record name');
 
-diag pp($r);
-
-
 ok($r = api_call(DELETE => "record/$domain/$id"), 'delete TXT record');
 
 $id = $r->{record}->{id};
@@ -111,6 +108,7 @@ is($r->{r}->{status}, 403, 'forbidden');
 ok($r = api_call(PUT => "domain/sub.$domain", { user => $account }), 'setup sub-domain with the same account');
 is($r->{r}->{status}, 201, 'created');
 
+# diag pp($r);
 
 $account->delete;
 $account2->delete;

@@ -23,8 +23,6 @@ is($r->{r}->{status}, 201, 'ok, created');
 ok($r = api_call(GET => "domain/$domain", { user => $account }), "Get domain");
 is($r->{records}->[0]->{type}, 'SOA', 'has soa record');
 
-
 diag pp($r);
-
-
 done_testing();
+exit;

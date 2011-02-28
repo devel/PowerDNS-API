@@ -144,9 +144,8 @@ sub _post_domain {
           unless $domain->master;
     }
 
-    $domain->increment_serial;
-
     $domain->update;
+    $domain->increment_serial;
 
     # TODO: commit
 

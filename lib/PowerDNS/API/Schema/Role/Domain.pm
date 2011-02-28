@@ -33,8 +33,8 @@ sub soa {
     }
     if ($args && %$args) {
         for my $f ($record->fields) {
-            warn "f: $f";
-            warn "v: ", $args->{$f} if defined $args->{$f};
+            #warn "f: $f";
+            #warn "v: ", $args->{$f} if defined $args->{$f};
             $record->$f($args->{$f}) if exists $args->{$f};
         }
         $record->insert_or_update;
@@ -48,10 +48,7 @@ sub soa {
 sub increment_serial {
     my $self = shift;
     my $soa = $self->soa;
-    warn "REF SOA: ", ref $soa;
     my $serial = $soa->serial || 0;
-    warn "serial: ", $serial;
-
     $soa->serial( ++$serial );
     $soa->update;
 
