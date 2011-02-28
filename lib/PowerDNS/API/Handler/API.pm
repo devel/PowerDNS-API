@@ -14,12 +14,12 @@ set serializer => 'JSONC';
 
 use Dancer::Plugin::REST;
 
-get '/domain/:id?' => \&_get_domain;
+get '/domain/:domain?' => \&_get_domain;
 sub _get_domain {
 
     my $account = vars->{account} or return status_unauthorized("unauthorized");
 
-    my $id = params->{id} || '';
+    my $id = params->{domain} || '';
     
     {
         my $x = "getting domain: [$id]";
