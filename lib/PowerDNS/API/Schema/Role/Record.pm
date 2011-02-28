@@ -23,6 +23,15 @@ around 'new' => sub {
     return $r;
 };
 
+around 'inflate_result' => sub {
+    my $orig = shift;
+    my $r = $orig->(@_);
+    if (my $class = $types{$r->type}) {
+        bless $r, $class
+    }
+    return $r;
+};
+
 around [ 'update', 'insert' ] => sub {
     my $orig = shift;
     my $self = shift;

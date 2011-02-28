@@ -144,7 +144,7 @@ sub _post_domain {
           unless $domain->master;
     }
 
-    # TODO: increment TTL
+    $domain->increment_serial;
 
     $domain->update;
 
@@ -181,6 +181,7 @@ sub _put_record {
     }
 
     $record->update;
+    $domain->increment_serial;
 
     return status_accepted( { record => $record, domain => $domain } );
 
@@ -225,7 +226,7 @@ sub _post_record {
 
     my $record = $domain->add_to_records($data);
 
-    # TODO: bump serial
+    $domain->increment_serial;
 
     return status_created({ domain => $domain, record => $record } );
 
@@ -253,6 +254,7 @@ sub _del_record {
     # check permissions
 
     $record->delete;
+    $domain->increment_serial;
 
     return status_ok({ message => "record deleted", domain => $domain });
 

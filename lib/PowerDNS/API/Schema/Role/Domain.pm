@@ -29,14 +29,34 @@ sub soa {
                 change_date => time,
             }
         );
+        $args->{serial} ||= 1;
     }
     if ($args && %$args) {
         for my $f ($record->fields) {
+            warn "f: $f";
+            warn "v: ", $args->{$f} if defined $args->{$f};
             $record->$f($args->{$f}) if exists $args->{$f};
         }
-        $record->update_or_insert;
+        $record->insert_or_update;
     }
+
+    #Test::More::diag( Data::Dump::pp( $record->data ) );
+
     return $record;
+}
+
+sub increment_serial {
+    my $self = shift;
+    my $soa = $self->soa;
+    warn "REF SOA: ", ref $soa;
+    my $serial = $soa->serial || 0;
+    warn "serial: ", $serial;
+
+    $soa->serial( ++$serial );
+    $soa->update;
+
+    $serial;
+
 }
 
 1;
