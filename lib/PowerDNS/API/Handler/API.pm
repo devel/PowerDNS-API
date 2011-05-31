@@ -132,7 +132,7 @@ sub _post_domain {
     return status_unauthorized("unauthorized")
       unless $account->has_access($domain);
 
-    # TODO: start transaction
+    my $txn = schema->txn_scope_guard;
 
     my $data = {};
     for my $f (qw(master type)) {
@@ -143,11 +143,11 @@ sub _post_domain {
         return status_bad_request("master required for slave domains")
           unless $domain->master;
     }
-
+    
     $domain->update;
     $domain->increment_serial;
 
-    # TODO: commit
+    $txn->commit;
 
     return status_ok({ domain => $domain });
 }
@@ -210,6 +210,8 @@ sub _post_record {
           or return status_bad_request("$f is required")
     }
 
+    my $txn = schema->txn_scope_guard;
+
     my $data = {};
     for my $f (qw( type name content ttl prio ) ) {
         next unless defined params->{$f};
@@ -224,8 +226,9 @@ sub _post_record {
     $data->{change_date} = time;
 
     my $record = $domain->add_to_records($data);
-
     $domain->increment_serial;
+
+    $txn->commit;
 
     return status_created({ domain => $domain, record => $record } );
 
@@ -250,10 +253,12 @@ sub _del_record {
     my $record = schema->record->find({ id => $record_id, domain_id => $domain->id })
       or return status_not_found("record not found");
 
-    # check permissions
+    my $txn = schema->txn_scope_guard;
 
     $record->delete;
     $domain->increment_serial;
+
+    $txn->commit;
 
     return status_ok({ message => "record deleted", domain => $domain });
 
