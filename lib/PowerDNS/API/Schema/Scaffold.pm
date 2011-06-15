@@ -17,6 +17,12 @@ override column_info => sub {
     return $info;
 };
 
+override column_accessor => sub {
+    my ($self, $column) = @_;
+    return "_cas" if $column->name eq 'cas' and $column->table->name eq 'domains';
+    return super;
+};
+
 override column_components => sub {
     my ($self, $column) = @_;
     my @components = super;

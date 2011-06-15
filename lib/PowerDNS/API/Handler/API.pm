@@ -152,6 +152,11 @@ sub _post_domain {
     die status_unauthorized("unauthorized")
       unless $account->has_access($domain);
 
+    my $req_cas = params->{cas};
+
+    die status_conflict("wrong cas value")
+      if $req_cas and $req_cas ne $domain->cas;
+
     my $data = {};
     for my $f (qw(master type)) {
         next unless defined params->{$f};

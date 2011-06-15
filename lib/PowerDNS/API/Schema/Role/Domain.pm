@@ -45,6 +45,26 @@ sub soa {
     return $record;
 }
 
+sub cas {
+    my $self = shift;
+    my $cas = $self->_cas;
+    return $cas if $cas;
+    return $self->update_cas;
+}
+
+sub update_cas {
+    my $self = shift;
+    # TODO: Use Math::Random or some such here; base36 encode the
+    # result
+
+    my $old_cas = $self->_cas || 'undefined';
+
+    my $cas = $self->_cas( substr( rand, 3, 10 ) );
+
+    $self->update; # does this make sense?
+    return $cas;
+}
+
 sub increment_serial {
     my $self = shift;
     my $soa = $self->soa;
@@ -52,8 +72,9 @@ sub increment_serial {
     $soa->serial( ++$serial );
     $soa->update;
 
-    $serial;
+    $self->update_cas;
 
+    $serial;
 }
 
 1;

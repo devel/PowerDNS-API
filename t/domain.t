@@ -18,11 +18,14 @@ ok( my $domain = $schema->domain->create(
             type => 'MASTER'
         }), "new domain");
 
+
 my $soa = $domain->soa;
 ok(my $serial = $domain->increment_serial, 'got serial');
 ok(   $serial = $domain->increment_serial, 'got serial');
+ok(my $cas = $domain->cas, 'got cas');
 
 ok( $domain = $schema->domain->find( { name => $domain_name }));
 is( $domain->soa->serial, $serial, "serial is $serial" );
+is( $domain->cas, $cas, "cas is the same");
 
 done_testing();
