@@ -26,7 +26,7 @@ my $r;
 ok($r = api_call(GET => "domain/", { user => $account->name } ), 'get list of domains');
 is($r->{domains} && scalar @{ $r->{domains} }, 0, 'empty list');
 
-ok($r = api_call(PUT => "domain/$slave_domain", { type => 'slave', user => $account } ), 'setup new slave domain, no master');
+ok($r = api_call(PUT => "domain/$slave_domain", { type => 'slave', user => $account } ), 'setup new slave domain, no master arg');
 is($r->{r}->{status}, 400, 'master parameter required');
 
 ok($r = api_call(PUT => "domain/$slave_domain", { type => 'slave', master => '127.0.0.2', user => $account } ),
@@ -38,7 +38,6 @@ is($r->{r}->{status}, 201, 'ok, created');
 # diag pp($r);
 
 ok($r = api_call(GET => "domain/", { user => $account } ), 'get list of domains');
-diag pp($r);
 is($r->{domains} && scalar @{ $r->{domains} }, 2, 'two domains in the list');
 
 ok($r = api_call(PUT => "domain/$domain"), 'setup the same domain again');

@@ -1,6 +1,7 @@
 package PowerDNS::API::Schema;
 use Moose;
 with 'PowerDNS::API::Schema::_scaffold';
+use DBI;
 
 has '+dbic' =>
   (handles => [qw(txn_do txn_scope_guard txn_begin txn_commit txn_rollback)],);
