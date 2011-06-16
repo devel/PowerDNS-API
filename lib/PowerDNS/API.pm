@@ -13,6 +13,7 @@ set 'warnings' => 1;
 set plack_middlewares => [
    [ 'Deflater' ],
    [ 'Auth::Basic', authenticator => \&authenticate, realm => 'PowerDNS::API' ],
+   [ 'AccessLog' ],
 ];
 
 sub schema {
