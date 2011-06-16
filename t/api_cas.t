@@ -44,31 +44,52 @@ $cas = $r->{domain}->{cas};
 
 ok($r = api_call(POST => "domain/$domain", { type => 'master', cas => $cas }), "Change domain back to be master");
 is($r->{domain}->{type}, 'MASTER', 'now master');
+isnt($r->{domain}->{cas}, $cas, "Got new cas value");
+ok($cas = $r->{domain}->{cas}, "got cas");
 
-diag("old cas: $cas");
-pp($r);
-done_testing();
-exit;
-
-ok($r = api_call(POST => "record/$domain", { type => 'NS', name => '', content => 'ns1.example.com' }), 'setup NS record');
-ok($r->{record}->{id}, 'got an ID');
+ok($r = api_call(POST => "record/$domain", { type => 'NS', name => '', content => 'ns1.example.com', cas => $cas }), 'setup NS record');
+ok(my $ns_id = $r->{record}->{id}, 'got an ID');
 is($r->{record}->{type}, 'NS', 'is an NS record');
+isnt($r->{domain}->{cas}, $cas, "Got new cas value");
+ok($cas = $r->{domain}->{cas}, "got cas");
 
-# check that we got a new domain cas
 
-# try posting a record with wrong cas
+ok($r = api_call(POST => "record/$domain", { type => 'NS', name => '', content => 'ns2.example.com', cas => 'wrong' }), 'setup NS record with wrong cas');
+is($r->{r}->{status}, 409, 'conflict, wrong cas');
+
+ok($r = api_call(GET => "domain/$domain", { name => '', type => 'NS' } ), "Get NS records");
+is(scalar @{ $r->{records} }, 1, "Got one record");
+is($r->{records}->[0]->{content}, 'ns1.example.com', "Got the right record");
+
+ok($r = api_call(PUT => "record/$domain/$ns_id", { type => 'NS', name => '', content => 'ns3.example.com', cas => 'wrong'}), 'replace NS record, wrong cas');
+is($r->{r}->{status}, 409, 'conflict, wrong cas');
 
 # post again with the right cas
-ok($r = api_call(POST => "record/$domain", { type => 'A', name => 'www', content => '10.0.0.1' }), 'setup A record');
-ok($r->{record}->{id}, 'got an ID');
-is($r->{record}->{content}, '10.0.0.1', 'correct content');
+ok($r = api_call(PUT => "record/$domain/$ns_id", { type => 'NS', name => '', content => 'ns3.example.com', cas => $cas }), 'replace NS record');
+is($r->{record}->{id}, $ns_id, 'got the same id');
+is($r->{record}->{content}, 'ns3.example.com', 'correct content');
+ok($cas = $r->{domain}->{cas}, "got cas");
 
-# try deleting a record with wrong cas
- 
+ok($r = api_call(DELETE => "record/$domain/$ns_id", { cas => 'wrong'}), 'delete record, wrong cas');
+is($r->{r}->{status}, 409, 'conflict, wrong cas');
+is($r->{error}, 'wrong cas value', 'got cas error');
 
-# delete a record with the right cas
+ok($r = api_call(DELETE => "record/$domain/$ns_id", { cas => $cas }), 'delete record');
+is($r->{message}, 'record deleted');
+is($r->{r}->{status}, 205, 'got 205 status code');
+# is($r->{record}->{content}, 'ns3.example.com', 'correct content');
+ok($cas = $r->{domain}->{cas}, "got cas");
+
+ok($r = api_call(GET => "domain/$domain", {  } ), "Get all records");
+is($r->{domain}->{cas}, $cas, 'got the right cas');
+is(scalar @{ $r->{records} }, 1, "Got one record");
+is($r->{records}->[0]->{type}, 'SOA', "Got the SOA record");
+
+$account->delete;
+
+done_testing();
 
 
-# check that the domain is setup correctly and that the domain comes back with the expected cas from the last update
+
 
 

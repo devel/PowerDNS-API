@@ -8,6 +8,10 @@ sub clean_hostname {
     return $name;
 }
 
+#after 'create' => sub {
+#    shift->update_cas;
+#};
+
 sub soa {
     my $self   = shift;
     my $args   = ref $_[0] ? shift : { @_ };

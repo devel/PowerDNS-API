@@ -33,6 +33,14 @@ sub _debug {
     $Test::More::VERSION ? Test::More::diag($msg) : debug($msg);
 }
 
+sub _check_cas {
+    my $domain = shift;
+    my $req_cas = params->{cas};
+
+    die status_conflict("wrong cas value")
+      if $req_cas and $req_cas ne $domain->cas;
+}
+
 get '/domain/:domain?' => sub { c(eval{ _get_domain(@_) }) };
 sub _get_domain {
 
@@ -152,10 +160,7 @@ sub _post_domain {
     die status_unauthorized("unauthorized")
       unless $account->has_access($domain);
 
-    my $req_cas = params->{cas};
-
-    die status_conflict("wrong cas value")
-      if $req_cas and $req_cas ne $domain->cas;
+    _check_cas($domain);
 
     my $data = {};
     for my $f (qw(master type)) {
@@ -193,11 +198,13 @@ sub _put_record {
     die status_method_not_allowed("Can't modify a SLAVE domain")
       if uc $domain->type eq 'SLAVE';
 
+    _check_cas($domain);
+
     my $record = schema->record->find({ id => $record_id, domain_id => $domain->id })
       or die status_not_found("record not found");
 
     # TODO:
-      # parse parameters as approprate for each type
+      # parse parameters as appropriate for each type
       # support specific names per data type as appropriate (rather than just 'content')
 
     for my $f ( qw( type name content ttl prio ) ) {
@@ -233,6 +240,8 @@ sub _post_record {
 
     die status_method_not_allowed("Can't modify a SLAVE domain")
       if uc $domain->type eq 'SLAVE';
+
+    _check_cas($domain);
 
     for my $f (qw( type name content ) ) {
         defined params->{$f}
@@ -279,6 +288,8 @@ sub _del_record {
     die status_method_not_allowed("Can't modify a SLAVE domain")
       if uc $domain->type eq 'SLAVE';
 
+    _check_cas($domain);
+
     my $record = schema->record->find({ id => $record_id, domain_id => $domain->id })
       or die status_not_found("record not found");
 
@@ -287,7 +298,7 @@ sub _del_record {
 
     $txn->commit;
 
-    return status_ok({ message => "record deleted", domain => $domain });
+    return status_reset_content({ message => "record deleted", domain => $domain });
 
 }
 
