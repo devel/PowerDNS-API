@@ -2,6 +2,12 @@ package PowerDNS::API::Schema::Scaffold;
 use Moose;
 extends 'MooseX::DBIC::Scaffold';
 
+my %no_serialize = (
+   accounts => [ qw( id password api_secret api_key ) ],
+   domains  => [ qw( notified_serial last_check ) ],
+);
+
+
 override column_info => sub {
     my ($self, $column) = @_;
     my $info = super;
@@ -11,8 +17,11 @@ override column_info => sub {
         $info->{timezone} = 'UTC';
     }
 
-    $info->{is_serializable} = 0 
-      if $column->name =~ m/^(password|api_secret)$/;
+    if (my $columns = $no_serialize{ $column->table->name } ) {
+        my $column_name = $column->name;
+        $info->{is_serializable} = 0 
+          if grep { $_ eq $column_name } @$columns; 
+    }
 
     return $info;
 };
