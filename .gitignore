@@ -16,3 +16,7 @@ cover_db
 
 /PowerDNS-API*
 
+run
+testrun
+coverrun
+
