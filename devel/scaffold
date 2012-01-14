@@ -1,8 +1,8 @@
 #!/bin/sh
 
-SCAFFOLD_PATH=/Users/ask/src/scaffold
+PERL5LIB="$PERL5LIB:./lib";
 
-PERL5LIB=$SCAFFOLD_PATH/lib:/Users/ask/src/SQL-Translator/lib:./lib  $SCAFFOLD_PATH/bin/dbic_scaffold \
+mesoderm \
   --user root \
   --dsn  'dbi:mysql:database=pdns;host=localhost;mysql_enable_utf8=1' \
   --schema_class PowerDNS::API::Schema \
