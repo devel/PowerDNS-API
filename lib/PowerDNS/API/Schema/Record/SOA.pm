@@ -3,6 +3,14 @@ use Moose;
 extends 'PowerDNS::API::Schema::Record';
 
 my @soa_fields = qw(primary hostmaster serial refresh retry expire default_ttl);
+my %defaults = (
+    primary     => 'ns',
+    hostmaster  => 'hostmaster',
+    refresh     => 10800,
+    retry       => 3600,
+    expire      => 604800,
+    default_ttl => 3600
+);
 
 sub fields {
     return @soa_fields;
@@ -19,7 +27,7 @@ sub _build_data {
 sub format_content {
     my $self = shift;
     my $data = $self->data;
-    my $content = join " ", map { $data->{$_} || '' } @soa_fields;
+    my $content = join " ", map { $data->{$_} || $defaults{$_} } @soa_fields;
     return $content;
 }
 

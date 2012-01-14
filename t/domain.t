@@ -20,6 +20,8 @@ ok( my $domain = $schema->domain->create(
 
 
 my $soa = $domain->soa;
+is( $domain->soa->default_ttl, 3600, "got the default ttl");
+
 ok(my $serial = $domain->increment_serial, 'got serial');
 ok(   $serial = $domain->increment_serial, 'got serial');
 ok(my $cas = $domain->cas, 'got cas');
@@ -27,5 +29,7 @@ ok(my $cas = $domain->cas, 'got cas');
 ok( $domain = $schema->domain->find( { name => $domain_name }));
 is( $domain->soa->serial, $serial, "serial is $serial" );
 is( $domain->cas, $cas, "cas is the same");
+
+is( $domain->soa->default_ttl, 3600, "got the default ttl");
 
 done_testing();
