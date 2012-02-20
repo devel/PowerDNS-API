@@ -1,7 +1,7 @@
 create table `accounts` (
    `id` int unsigned not null auto_increment primary key,
    `name` varchar(40) character set latin1 not null,
-   `password_sha` varchar(60) default null,
+   `password` varchar(60) default null,
    `api_key` varchar(32),
    `api_secret` varchar(32),
    unique key (`name`),
