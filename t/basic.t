@@ -69,6 +69,9 @@ ok($r = api_call(POST => "record/$domain", { type => 'NS', name => '', content =
 ok($r->{record}->{id}, 'got an ID');
 is($r->{record}->{type}, 'NS', 'is an NS record');
 
+ok($r = api_call(POST => "record/$domain", { type => 'SOA', name => '' }), 'Add a second SOA record');
+is($r->{r}->{status}, 406, 'Not acceptable');
+
 ok($r = api_call(POST => "record/$domain", { type => 'A', name => 'www', content => '10.0.0.1' }), 'setup A record');
 ok($r->{record}->{id}, 'got an ID');
 is($r->{record}->{content}, '10.0.0.1', 'correct content');

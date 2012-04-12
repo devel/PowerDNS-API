@@ -248,6 +248,9 @@ sub _post_record {
           or die status_bad_request("$f is required")
     }
 
+    die status_not_acceptable("Can't create a second SOA record")
+      if uc params->{type} eq 'SOA';
+
     my $data = {};
     for my $f (qw( type name content ttl prio ) ) {
         next unless defined params->{$f};
