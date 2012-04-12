@@ -6,6 +6,7 @@ my @soa_fields = qw(primary hostmaster serial refresh retry expire default_ttl);
 my %defaults = (
     primary     => 'ns',
     hostmaster  => 'hostmaster',
+    serial      => 1,
     refresh     => 10800,
     retry       => 3600,
     expire      => 604800,

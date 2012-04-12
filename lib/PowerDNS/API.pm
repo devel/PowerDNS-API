@@ -22,7 +22,7 @@ sub schema {
 
 prefix undef;
 
-before sub {
+hook 'before' => sub {
     my $username = request->{env}->{REMOTE_USER};
     return unless $username;
     my $account = schema->account->find({ name => $username })

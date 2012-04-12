@@ -18,3 +18,4 @@ table.  The docs/schema.sql file has the SQL to be run to set this up.
 For the 'CAS' API system to work properly, the system expects the
 transaction isolation level of MySQL to be 'REPEATABLE READ' (this is
 the default).
+

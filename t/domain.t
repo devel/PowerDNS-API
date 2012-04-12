@@ -32,4 +32,8 @@ is( $domain->cas, $cas, "cas is the same");
 
 is( $domain->soa->default_ttl, 3600, "got the default ttl");
 
+# TODO: should probably make sure the default_ttl (from the soa
+# content) and the ttl (from the ttl column) values are kept in sync
+is( $domain->soa->ttl, 3600, "ttl record itself has a ttl, too");
+
 done_testing();

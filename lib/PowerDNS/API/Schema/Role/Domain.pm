@@ -16,7 +16,7 @@ sub soa {
     my $self   = shift;
     my $args   = ref $_[0] ? shift : { @_ };
     my $schema = PowerDNS::API::Schema->instance;
-    my $record = $schema->record->find
+    my $record = $schema->record->single
       (
        {   type      => 'SOA',
            domain_id => $self->id

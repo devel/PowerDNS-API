@@ -41,7 +41,7 @@ sub get_response_for_request {
     my ($method, $path, $params) = @_;
     my $request = fake_request($method => $path, $params);
     Dancer::SharedData->request($request);
-    Dancer::Renderer::get_action_response();
+    Dancer::Renderer->get_action_response();
 }
 
 sub api_call {
