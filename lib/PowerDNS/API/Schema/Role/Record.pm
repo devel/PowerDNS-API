@@ -6,6 +6,7 @@ use Class::MOP;
 
 my %types = (
     'SOA' => 'PowerDNS::API::Schema::Record::SOA',
+    'A'   => 'PowerDNS::API::Schema::Record::A',
 );
 
 sub load_type_classes {
@@ -54,26 +55,20 @@ sub format_content {
     shift->data;
 }
 
+sub fields { return () }
+
 sub TO_JSON {
     my $self = shift;
 
     my $data = { 
                 map +($_ => $self->$_),
-                @{$self->serializable_columns}
+                @{$self->serializable_columns}, $self->fields
                };
     
     my $domain = $self->domain->name;
    
     $data->{name} =~ s{\Q$domain\E$}{};
     $data->{name} =~ s{\.$}{};
-
-    my $m = "_parse_" . lc $self->type;
-    if ($self->can($m)) {
-        $data->{data} = $self->$m;
-    }
-    else {
-        $data->{data} = $self->data;
-    }
 
     return $data;
 }

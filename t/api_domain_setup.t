@@ -24,7 +24,7 @@ $t->status_is(201, 'ok, created');
 ok($r = api_call(GET => "domain/$domain", { user => $account }), "Get domain");
 $t->status_is(200);
 is($r->{records}->[0]->{type}, 'SOA', 'has soa record');
-is($r->{records}->[0]->{data}->{hostmaster}, 'ask@example.com', 'soa hostmaster');
+is($r->{records}->[0]->{hostmaster}, 'ask@example.com', 'soa hostmaster');
 #diag pp($r->{records});
 
 ok($r = api_call(PUT => "domain/$domain", { user => $account }), 'setup duplicate new domain');
