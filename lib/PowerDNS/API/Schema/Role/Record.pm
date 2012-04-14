@@ -14,6 +14,7 @@ sub load_type_classes {
     }
 }
 
+# todo: merge with 'inflate_result'
 around 'new' => sub {
     my $orig = shift;
     my $r = $orig->(@_);
@@ -71,7 +72,7 @@ sub TO_JSON {
         $data->{data} = $self->$m;
     }
     else {
-        $self->{data} = $self->content;
+        $data->{data} = $self->data;
     }
 
     return $data;

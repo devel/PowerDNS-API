@@ -33,6 +33,7 @@ sub soa {
                 change_date => time,
             }
         );
+        #warn "RECORD REF ", ref $record;
         $args->{serial} ||= 1;
     }
     if ($args && %$args) {

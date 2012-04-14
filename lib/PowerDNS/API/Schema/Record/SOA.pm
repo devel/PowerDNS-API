@@ -45,3 +45,12 @@ has '+data' => (
 );
 
 1;
+
+__END__
+
+    if (my $mbox = config->{"pdns-soa"}->{hostmaster}) {
+        params->{hostmaster} ||= $mbox;
+    }
+    use Data::Dump 'pp';
+    my $p = params;
+    pp($p);

@@ -5,7 +5,6 @@ use Data::Dump qw(pp);
 use lib 't';
 
 use PowerDNS::API::Schema;
-use Dancer::Test;
 
 use TestUtils;
 

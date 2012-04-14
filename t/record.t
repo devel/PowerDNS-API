@@ -5,7 +5,6 @@ use Data::Dump qw(pp);
 use lib 't';
 
 use PowerDNS::API::Schema;
-use Dancer::Test;
 
 my $schema = PowerDNS::API::Schema->new;
 
@@ -27,6 +26,6 @@ $record->serial(1);
 is($record->serial, 1, 'record serial got set');
 $data = $record->data;
 
-diag(Data::Dump::pp($data));
+#diag(Data::Dump::pp($data));
 
 done_testing();

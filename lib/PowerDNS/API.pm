@@ -1,48 +1,52 @@
 package PowerDNS::API;
-use Dancer ':syntax';
-use PowerDNS::API::Handler::API;
+use Mojo::Base 'Mojolicious';
+#use PowerDNS::API::Handler::API;
 use PowerDNS::API::Schema;
 use Data::Dump ();
-
-set 'logger' => 'console';
-set 'log' => 'debug';
-set 'show_errors' => 1;
-set 'access_log' => 1;
-set 'warnings' => 1;
-
-set plack_middlewares => [
-   [ 'Deflater' ],
-   [ 'Auth::Basic', authenticator => \&authenticate, realm => 'PowerDNS::API' ],
-   [ 'AccessLog' ],
-];
 
 sub schema {
     return PowerDNS::API::Schema->instance;
 }
 
-prefix undef;
+# This method will run once at server start
+sub startup {
+    my $self = shift;
 
-hook 'before' => sub {
-    my $username = request->{env}->{REMOTE_USER};
-    return unless $username;
-    my $account = schema->account->find({ name => $username })
-      or return;
-    var account => $account;
-};
+    $self->secret("asdgasdf");
 
-sub authenticate {
-    my ($username, $password) = @_;
-    my $user = schema->account->find({ name => $username });
-    return 1 if $user and $user->check_password($password);
-    return 0;
+    warn "starting\n";
+
+    $self->plugin('BasicAuth');
+
+    # Documentation browser under "/perldoc"
+    $self->plugin('PODRenderer');
+
+    # Router
+    my $r  = $self->routes;
+    my $ar   = $r->bridge('/')->to(action => 'auth');
+    my $apir = $ar->to(controller => 'handler');
+
+    my @api_handlers = (
+        ['domain/*domain' => 'POST' => 'post_domain'],
+        ['domain/*domain' => 'GET'  => 'get_domain'],
+        ['domain/*domain' => 'PUT'  => 'put_domain'],
+
+        ['record/*domain'     => 'POST' => 'post_record'],
+        ['record/*domain/*id' => 'PUT'  => 'put_record'],
+        ['record/*domain/*id' => 'DELETE' => 'delete_record'],
+    );
+
+    for my $h (@api_handlers) {
+        my @h = @$h;
+        $apir->route("/api/" . $h[0])->via($h[1])
+          ->to(domain => '', action => 'handle_request', api_handler => $h[2], format => 'html')->name($h[2]);
+    }
+
+    # Normal route to controller
+    $r->route('/')->to('example#welcome');
 }
 
-get '/' => sub {
-    my $r = request;
-    template 'index';
-};
-
-true;
+1;
 
 __END__
 
@@ -62,10 +66,10 @@ Ask Bjørn Hansen, C<< <ask at develooper.com> >>
 =head1 BUGS
 
 Please report any bugs or feature requests to the issue tracker at
-L<http://github.com/abh/PowerDNS-API/issues>.
+L<http://github.com/devel/PowerDNS-API/issues>.
 
 The Git repository is available at
-L<http://github.com/abh/PowerDNS-API>
+L<http://github.com/devel/PowerDNS-API>
 
 
 =head1 COPYRIGHT & LICENSE

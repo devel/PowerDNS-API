@@ -1,5 +1,6 @@
 package PowerDNS::API::Schema;
 use Moose;
+
 with 'PowerDNS::API::Schema::_scaffold';
 use DBI;
 
@@ -18,9 +19,19 @@ sub instance {
     }
 }
 
+sub config {
+    my $self = shift;
+    return { data_source => 'dbi:mysql:database=pdns',
+             user => 'root'
+           };
+}
+
 sub connect_args {
+    my $self = shift;
+    my $config = $self->config;
+
     (   sub {
-            my $config = Dancer::setting("database");
+            
             DBI->connect(
                 $config->{data_source},
                 $config->{user},
