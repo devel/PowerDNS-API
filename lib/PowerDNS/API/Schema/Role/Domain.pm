@@ -41,6 +41,8 @@ sub soa {
             #warn "v: ", $args->{$f} if defined $args->{$f};
             $record->$f($args->{$f}) if exists $args->{$f};
         }
+        $args->{ttl} ||= $record->data->{default_ttl};
+        $record->ttl($args->{ttl});
         $record->insert_or_update;
     }
 

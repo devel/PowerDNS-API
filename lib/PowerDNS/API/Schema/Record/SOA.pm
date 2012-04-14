@@ -19,9 +19,13 @@ sub fields {
 
 sub _build_data {
     my $self = shift;
-    my %data;
-    return {} unless $self->content;
-    @data{@soa_fields} = split /\s+/, $self->content;
+
+    # make new objects return the defaults;
+    my %data = %defaults;
+
+    if ($self->content) {
+        @data{@soa_fields} = split /\s+/, $self->content;
+    }
     return \%data;
 }
 
