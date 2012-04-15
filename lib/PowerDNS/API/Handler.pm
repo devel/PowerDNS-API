@@ -25,11 +25,6 @@ sub handle_request {
     }
 }
 
-sub _debug {
-    my $msg = join " ", @_; 
-    $Test::More::VERSION ? Test::More::diag($msg) : debug($msg);
-}
-
 sub _check_cas {
     my $self = shift;
     my $domain = shift;
@@ -89,10 +84,6 @@ sub _records {
 
    return $data;
 
-}
-
-sub _soa_fields {
-    return qw(primary hostmaster serial refresh retry expire default_ttl);
 }
 
 sub put_domain {
