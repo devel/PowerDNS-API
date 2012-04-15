@@ -28,13 +28,15 @@ $data = $record->data;
 
 ok( $record = $schema->record->create(
         {   domain_id => $domain->id,
-            name      => 'FOObar',
+            name      => 'foobar.' . $domain->name,
             type      => 'A',
             content   => '10.0.0.1'
         }
     ), 'soa record');
 isa_ok($record, 'PowerDNS::API::Schema::Record::A');
 is($record->TO_JSON->{address}, '10.0.0.1', 'TO_JSON address');
+is($record->name, 'foobar.' . $domain->name , 'name is fqdn');
+is($record->TO_JSON->{name}, 'foobar', 'TO_JSON name is without the domain');
 
 #diag(Data::Dump::pp($data));
 
