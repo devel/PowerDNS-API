@@ -91,8 +91,7 @@ sub put_domain {
 
     my $account = $self->stash('account') or die $self->render_error(401, "unauthorized");
 
-    my $name = $self->stash('domain') or die $self->render_error(400);
-    # check permissions
+    my $name = lc $self->stash('domain') or die $self->render_error(400);
 
     my $txn = $self->schema->txn_scope_guard;
 

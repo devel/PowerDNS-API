@@ -30,6 +30,11 @@ is($r->{records}->[0]->{hostmaster}, 'ask@example.com', 'soa hostmaster');
 ok($r = api_call(PUT => "domain/$domain", { user => $account }), 'setup duplicate new domain');
 $t->status_is(409);
 
+$domain = uc test_domain_name;
+ok($r = api_call(PUT => "domain/$domain", { user => $account }), 'setup new domain (uppercase)');
+$t->status_is(201);
+is($r->{domain}->{name}, lc $domain, "got setup as lowercase domain");
+
 #diag pp($r);
 
 ok($account->delete, 'deleted account again');
