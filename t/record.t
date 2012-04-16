@@ -10,7 +10,7 @@ my $schema = PowerDNS::API::Schema->new;
 
 ok(my $domain = $schema->domain->create({ name => "record-test-" . time . ".test",
       type => 'MASTER'
-       }), "new domain");
+}), "new domain");
 
 
 ok( my $record = $schema->record->create(
@@ -42,5 +42,7 @@ is($record->name, 'foobar.' . $domain->name , 'name is fqdn');
 is($record->TO_JSON->{name}, 'foobar', 'TO_JSON name is without the domain');
 
 #diag(Data::Dump::pp($data));
+
+$domain->delete;
 
 done_testing();
