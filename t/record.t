@@ -23,6 +23,9 @@ isa_ok($record, 'PowerDNS::API::Schema::Record::SOA');
 my $data = $record->data;
 
 $record->serial(1);
+is($record->TO_JSON->{serial}, 1, 'TO_JSON->{serial}');
+is($record->TO_JSON->{default_ttl}, 3600, 'TO_JSON->{default_ttl}');
+
 is($record->serial, 1, 'record serial got set');
 $data = $record->data;
 
