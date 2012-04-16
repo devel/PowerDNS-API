@@ -34,15 +34,20 @@ is($r->{record}->{type}, 'NS', 'is an NS record');
 ok($r = api_call(POST => "record/$domain", { type => 'SOA', name => '', content => '' }), 'Add a second SOA record');
 $t->status_is(406);
 
-ok($r = api_call(POST => "record/$domain", { type => 'A', name => 'www', content => '10.0.0.1' }), 'setup A record');
+ok($r = api_call(POST => "record/$domain", { type => 'A', name => 'wwW', content => '10.0.0.1' }), 'setup A record');
 ok($r->{record}->{id}, 'got an ID');
 is($r->{record}->{content}, '10.0.0.1', 'correct content');
+is($r->{record}->{name}, 'www', 'return lower-case name');
+is($r->{record}->{address}, '10.0.0.1', 'A record also has "address"');
 
 my $id = $r->{record}->{id};
 
-ok($r = api_call(PUT => "record/$domain/$id", { content => '10.0.0.2' }), 'change A record');
+ok($r = api_call(PUT => "record/$domain/$id", { content => '10.0.0.2' }), 'change A record, content');
 is($r->{record}->{content}, '10.0.0.2', 'correct content');
 
+ok($r = api_call(PUT => "record/$domain/$id", { name => 'www.FOO' }), 'change A record, name');
+is($r->{record}->{content}, '10.0.0.2', 'correct content');
+is($r->{record}->{name}, 'www.foo', 'correct name');
 
 ok( $r = api_call(
         POST => "record/$domain",
@@ -54,13 +59,14 @@ ok( $r = api_call(
     ),
     'setup TXT record with TTL'
 );
-ok($r->{record}->{id}, 'got an ID');
+ok($id = $r->{record}->{id}, 'got an ID');
 is($r->{record}->{ttl}, 600, 'correct TTL');
 
-ok($r = api_call(GET => "domain/$domain", { type => 'A', name => 'www' }), "Get records with filter");
+ok($r = api_call(GET => "domain/$domain", { type => 'A' }), "Get records with filter");
 ok($r->{domain}, "got domain back");
 is($r->{domain}->{name}, $domain, 'got the right domain');
-is($r->{records}->[0]->{name}, 'www', 'got the right record name');
+is($r->{records}->[0]->{name}, 'www.foo', 'got the right record name');
+#diag pp($r->{records});
 
 ok($r = api_call(DELETE => "record/$domain/$id"), 'delete TXT record');
 

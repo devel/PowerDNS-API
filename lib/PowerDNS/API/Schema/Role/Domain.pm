@@ -5,7 +5,7 @@ sub clean_hostname {
     my ($domain, $name) = @_;
     my $domain_name = lc $domain->name;
     $name .= ( $name ? "." : "" ) . $domain->name;
-    return $name;
+    return lc $name;
 }
 
 #after 'create' => sub {

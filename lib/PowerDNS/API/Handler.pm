@@ -203,8 +203,12 @@ sub put_record {
       # parse parameters as appropriate for each type
       # support specific names per data type as appropriate (rather than just 'content')
 
-    for my $f ( qw( type name content ttl prio ) ) {
+    for my $f ( qw( type content ttl prio ) ) {
         $record->$f( $self->param($f) ) if defined $self->param($f);
+    }
+
+    if (my $name = $self->param('name')) {
+        $record->name($domain->clean_hostname($name));
     }
 
     $record->update;
@@ -253,7 +257,7 @@ sub post_record {
         $data->{$f} = $self->param($f);
     }
     $data->{type} = uc $data->{type};
-    $data->{name} = $domain->clean_hostname( $data->{name} );
+    $data->{name} = lc $domain->clean_hostname( $data->{name} );
     unless (defined $data->{ttl}) {
         $data->{ttl} = $data->{type} eq 'NS' ? 86400 : 7200;
     }
