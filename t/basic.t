@@ -65,50 +65,6 @@ is($r->{domain}->{type}, 'SLAVE', 'now slave');
 ok($r = api_call(POST => "domain/$domain", { type => 'master' }), "Change domain back to be master");
 is($r->{domain}->{type}, 'MASTER', 'now master');
 
-ok($r = api_call(POST => "record/$domain", { type => 'NS', name => '', content => 'ns1.example.com' }), 'setup NS record');
-ok($r->{record}->{id}, 'got an ID');
-is($r->{record}->{type}, 'NS', 'is an NS record');
-
-ok($r = api_call(POST => "record/$domain", { type => 'SOA', name => '', content => '' }), 'Add a second SOA record');
-$t->status_is(406, 'Not acceptable');
-
-ok($r = api_call(POST => "record/$domain", { type => 'A', name => 'www', content => '10.0.0.1' }), 'setup A record');
-ok($r->{record}->{id}, 'got an ID');
-is($r->{record}->{content}, '10.0.0.1', 'correct content');
-
-my $id = $r->{record}->{id};
-
-ok($r = api_call(PUT => "record/$domain/$id", { content => '10.0.0.2' }), 'change A record');
-is($r->{record}->{content}, '10.0.0.2', 'correct content');
-
-
-ok( $r = api_call(
-        POST => "record/$domain",
-        {   type    => 'TXT',
-            name    => '_spf',
-            content => 'some text goes here',
-            ttl     => 600
-        }
-    ),
-    'setup TXT record with TTL'
-);
-ok($r->{record}->{id}, 'got an ID');
-is($r->{record}->{ttl}, 600, 'correct TTL');
-
-ok($r = api_call(GET => "domain/$domain", { type => 'A', name => 'www' }), "Get records with filter");
-ok($r->{domain}, "got domain back");
-is($r->{domain}->{name}, $domain, 'got the right domain');
-is($r->{records}->[0]->{name}, 'www', 'got the right record name');
-
-ok($r = api_call(DELETE => "record/$domain/$id"), 'delete TXT record');
-
-$id = $r->{record}->{id};
-
-ok($r = api_call(PUT => "domain/sub2.$domain", { user => $account2 }), 'setup sub-domain with another account');
-$t->status_is(403, 'forbidden');
-
-ok($r = api_call(PUT => "domain/sub.$domain", { user => $account }), 'setup sub-domain with the same account');
-$t->status_is(201, 'created');
 
 # diag pp($r);
 
