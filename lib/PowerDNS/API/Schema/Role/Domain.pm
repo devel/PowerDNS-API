@@ -15,7 +15,7 @@ sub clean_hostname {
 sub soa {
     my $self   = shift;
     my $args   = ref $_[0] ? shift : { @_ };
-    my $schema = PowerDNS::API::Schema->instance;
+    my $schema = $self->schema;
     my $record = $schema->record->single
       (
        {   type      => 'SOA',
