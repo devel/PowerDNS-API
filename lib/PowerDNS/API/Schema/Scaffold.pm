@@ -1,6 +1,6 @@
 package PowerDNS::API::Schema::Scaffold;
 use Moose;
-extends 'MooseX::DBIC::Scaffold';
+extends 'Mesoderm';
 
 my %no_serialize = (
    accounts => [ qw( id password api_secret api_key ) ],
