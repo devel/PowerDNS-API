@@ -6,7 +6,6 @@ use base 'Exporter';
 use vars '@EXPORT';
 
 use JSON qw(decode_json);
-use URI ();
 
 @EXPORT =
   qw(setup_user test_domain_name api_call fake_request get_response_for_request);
