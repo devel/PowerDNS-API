@@ -15,7 +15,8 @@ ok(my $domain = $schema->domain->create({ name => "record-test-" . time . ".test
 
 ok( my $record = $schema->record->create(
         {   domain_id => $domain->id,
-            type      => 'SOA'
+            type      => 'SOA',
+            name      => '',
         }
     ), 'soa record');
 
