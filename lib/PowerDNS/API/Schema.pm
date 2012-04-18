@@ -45,7 +45,8 @@ sub connect_args {
         {   quote_char    => q{`},
             name_sep      => q{.},
             on_connect_do => [
-                "SET sql_mode = 'STRICT_TRANS_TABLES'", "SET time_zone = 'UTC'",
+                "SET sql_mode = 'STRICT_TRANS_TABLES'",
+                # "SET time_zone = 'UTC'",  # Enable if adding datetime columns
             ],
         }
     );
