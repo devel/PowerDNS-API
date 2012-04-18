@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.1.52, for apple-darwin10.5.0 (i386)
+-- MySQL dump 10.13  Distrib 5.5.10, for Linux (x86_64)
 --
 -- Host: localhost    Database: pdns
 -- ------------------------------------------------------
--- Server version	5.1.52-log
+-- Server version	5.5.10-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -30,7 +30,40 @@ CREATE TABLE `accounts` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `api_key` (`api_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=253 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cryptokeys`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cryptokeys` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `domain_id` int(11) NOT NULL,
+  `flags` int(11) NOT NULL,
+  `active` tinyint(1) DEFAULT NULL,
+  `content` text CHARACTER SET latin1,
+  PRIMARY KEY (`id`),
+  KEY `domainidindex` (`domain_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `domainmetadata`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `domainmetadata` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `domain_id` int(11) NOT NULL,
+  `kind` varchar(16) CHARACTER SET latin1 DEFAULT NULL,
+  `content` text CHARACTER SET latin1,
+  PRIMARY KEY (`id`),
+  KEY `domainmetaidindex` (`domain_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -51,9 +84,8 @@ CREATE TABLE `domains` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_index` (`name`),
   KEY `account` (`account`),
-  KEY `account_2` (`account`),
   CONSTRAINT `domains_ibfk_1` FOREIGN KEY (`account`) REFERENCES `accounts` (`name`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1558 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,18 +97,21 @@ CREATE TABLE `domains` (
 CREATE TABLE `records` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `domain_id` int(11) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `type` varchar(6) DEFAULT NULL,
-  `content` varchar(255) DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  `type` varchar(10) DEFAULT NULL,
+  `content` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
   `ttl` int(11) DEFAULT NULL,
   `prio` int(11) DEFAULT NULL,
-  `change_date` int(10) unsigned DEFAULT NULL,
+  `change_date` int(11) DEFAULT NULL,
+  `ordername` varchar(255) DEFAULT NULL,
+  `auth` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `rec_name_index` (`name`),
   KEY `nametype_index` (`name`,`type`),
   KEY `domain_id` (`domain_id`),
+  KEY `orderindex` (`ordername`),
   CONSTRAINT `records_ibfk_1` FOREIGN KEY (`domain_id`) REFERENCES `domains` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=588709 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -88,8 +123,27 @@ CREATE TABLE `records` (
 CREATE TABLE `supermasters` (
   `ip` varchar(25) NOT NULL,
   `nameserver` varchar(255) NOT NULL,
-  `account` varchar(40) DEFAULT NULL
+  `account` varchar(40) DEFAULT NULL,
+  PRIMARY KEY (`ip`),
+  KEY `account` (`account`),
+  CONSTRAINT `supermasters_ibfk_1` FOREIGN KEY (`account`) REFERENCES `accounts` (`name`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tsigkeys`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tsigkeys` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  `algorithm` varchar(50) DEFAULT NULL,
+  `secret` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `namealgoindex` (`name`,`algorithm`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -101,4 +155,4 @@ CREATE TABLE `supermasters` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-06-14 17:01:53
+-- Dump completed on 2012-04-17 13:41:38

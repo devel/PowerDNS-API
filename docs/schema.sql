@@ -20,3 +20,5 @@ alter table domains
   add cas  varchar(10) not null default '';
 update domains set cas = SUBSTRING( RAND(), 3, 10 );
 
+alter table supermasters add primary key (ip),
+  add constraint foreign key (`account`) references accounts (`name`) on delete cascade;
