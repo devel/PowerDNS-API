@@ -1,0 +1,15 @@
+Crypt::SaltedHash
+Data::Dump
+DateTime::Format::MySQL
+DBD::mysql
+DBIx::Class
+DBIx::Class::Helper::Row::ToJSON
+DBIx::Class::InflateColumn::Serializer
+ExtUtils::MakeMaker
+JSON
+local::lib
+Mojolicious
+Mojolicious::Plugin::BasicAuth
+Moose
+namespace::clean
+Test::More

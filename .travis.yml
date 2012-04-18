@@ -2,10 +2,11 @@ language: perl
 before_install:
   - curl -o /tmp/pdns.deb http://mirrors.develooper.com/ask/pdns/pdns-static_3.1-rc2.20120414.2567-1_i386.deb
   - sudo dpkg -i /tmp/pdns.deb
-  - sudo apt-get install libdist-zilla-perl
+install:
+  - cpanm -q -n < .travis.dependencies
 before_script:
-  - mysqladmin -uroot create pdns
+  - mysql -uroot -e 'create database pdns;'
   - mysql -uroot pdns < docs/full-schema.sql
-  - dzil listdeps | cpanm -n
+script: HARNESS_IS_VERBOSE=1 prove -v -Ilib t
 perl:
   - "5.10"
