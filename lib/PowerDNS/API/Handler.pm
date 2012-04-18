@@ -1,8 +1,6 @@
 package PowerDNS::API::Handler;
 use Mojo::Base 'PowerDNS::API::Controller';
 use Moose;
-use URI;
-use URI::QueryParam;
 use Data::Dump qw(pp);
 use Try::Tiny;
 

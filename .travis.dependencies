@@ -13,3 +13,4 @@ Mojolicious::Plugin::BasicAuth
 Moose
 namespace::clean
 Test::More
+Try::Tiny
