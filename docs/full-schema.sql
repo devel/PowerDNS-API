@@ -22,13 +22,11 @@
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `accounts` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(40) CHARACTER SET latin1 NOT NULL,
   `password` varchar(60) DEFAULT NULL,
   `api_key` varchar(32) DEFAULT NULL,
   `api_secret` varchar(32) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
+  PRIMARY KEY (`name`),
   UNIQUE KEY `api_key` (`api_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

@@ -16,7 +16,7 @@ sub has_access {
 
     # return 1 if $self->is_admin;
 
-    return 1 if ($domain->account and $domain->account->id == $self->id );
+    return 1 if ($domain->account and $domain->account->id eq $self->id );
     return 0;
 }
 
