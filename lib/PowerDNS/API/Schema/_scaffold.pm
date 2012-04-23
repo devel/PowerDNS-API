@@ -386,6 +386,7 @@ has 'record' => (
         name => {
             data_type     => 'VARCHAR',
             default_value => undef,
+            extra         => { 'character set' => 'latin1' },
             is_nullable   => 1,
             size          => 255
         },
@@ -393,11 +394,12 @@ has 'record' => (
             data_type     => 'VARCHAR',
             default_value => undef,
             is_nullable   => 1,
-            size          => 6
+            size          => 10
         },
         content => {
             data_type     => 'VARCHAR',
             default_value => undef,
+            extra         => { 'character set' => 'latin1' },
             is_nullable   => 1,
             size          => 255
         },
