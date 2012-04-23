@@ -10,3 +10,5 @@ before_script:
 script: HARNESS_IS_VERBOSE=1 prove -v -Ilib t || cat log/development.log
 perl:
   - "5.10"
+  - "5.12"
+  - "5.14"
