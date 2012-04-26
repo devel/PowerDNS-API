@@ -84,5 +84,16 @@ sub increment_serial {
     $serial;
 }
 
+sub TO_JSON {
+    my $self = shift;
+
+    my $data = {map +($_ => $self->$_), @{$self->serializable_columns}};
+
+    my $soa = $self->soa;
+    $data->{soa} = $soa;
+
+    return $data;
+}
+
 1;
 
