@@ -11,8 +11,8 @@ sub schema {
 
 sub render_json {
     my ($self, $data, $status) = @_;
-    $self->stash(status => $status) if $status;
-    $self->render_text($json->encode($data));
+    $status ||= 200;
+    $self->render_text($json->encode($data), status => $status);
 }
 
 sub auth {
