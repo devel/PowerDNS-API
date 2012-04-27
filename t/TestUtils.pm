@@ -23,8 +23,9 @@ sub setup_user {
     return $account;
 }
 
+my $domaincount = 0;
 sub test_domain_name {
-    return "abc-" . time . "-". int(rand(9)) . ".test";
+    return "abc-" . time . "-". ++$domaincount . int(rand(99)) . ".test";
 }
 
 sub get_response_for_request {
