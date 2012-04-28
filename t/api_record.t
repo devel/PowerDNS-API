@@ -15,9 +15,10 @@ $TestUtils::t = $t;
 
 my $r;
 
+my $schema = $t->app->schema;
+
 my $domain = test_domain_name;
 
-my $schema = PowerDNS::API::schema();
 ok(my $account  = setup_user, 'setup account');
 ok(my $account2 = setup_user, 'setup account 2');
 

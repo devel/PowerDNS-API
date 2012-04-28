@@ -5,35 +5,41 @@ with 'PowerDNS::API::Schema::_scaffold';
 use DBI;
 
 has '+dbic' =>
-  (handles => [qw(txn_do txn_scope_guard txn_begin txn_commit txn_rollback)],);
+  (handles => [qw(txn_do txn_scope_guard txn_begin txn_commit txn_rollback)]);
 
-our $instance;
-
-sub instance { 
-    my $class = shift;
-    unless (@_) {
-        return $instance ||= $class->new;
+has 'config' => (
+    isa     => 'HashRef',
+    is      => 'ro',
+    default => sub {
+        return {
+            database => 'powerdns',
+            host     => 'localhost',
+            user     => 'root',
+            password => undef,
+        };
     }
-    else {
-        return $class->new(@_);
-    }
-}
-
-sub config {
-    my $self = shift;
-    return { data_source => 'dbi:mysql:database=pdns',
-             user => 'root'
-           };
-}
+);
 
 sub connect_args {
     my $self = shift;
+
     my $config = $self->config;
 
     (   sub {
-            
+
+            my $data_source;
+            if ($config->{data_source}) {
+                $data_source = $config->{data_source};
+            }
+            else {
+                $data_source = "dbi:mysql:database=$config->{database}";
+                for my $f (qw(host port)) {
+                    $data_source .= ";host=$config->{$f}" if $config->{$f};
+                }
+            }
+
             DBI->connect(
-                $config->{data_source},
+                $data_source,
                 $config->{user},
                 $config->{password},
                 {   AutoCommit        => 1,

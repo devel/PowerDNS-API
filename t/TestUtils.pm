@@ -2,6 +2,10 @@ package TestUtils;
 use strict;
 use warnings;
 
+BEGIN {
+    $ENV{MOJO_CONFIG} ||= './t/powerdns-api.conf';
+}
+
 use base 'Exporter';
 use vars '@EXPORT';
 
@@ -16,7 +20,7 @@ my $inc = 0;
 sub setup_user {
     my $accountname = 'test.' . time . '.' . ++$inc;
     my $password    = rand;
-    my $schema      = PowerDNS::API::schema();
+    my $schema      = $t->app->schema();
     my $account =
       $schema->account->create({name => $accountname, password => $password});
     $account->{__password} = $password;

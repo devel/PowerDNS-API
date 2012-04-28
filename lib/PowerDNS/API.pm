@@ -4,17 +4,31 @@ use Mojo::Base 'Mojolicious';
 use PowerDNS::API::Schema;
 use Data::Dump ();
 
+my $schema;
 sub schema {
-    return PowerDNS::API::Schema->instance;
+    my $self = shift;
+
+    return $schema ||= do {
+        my $db_config = $self->config->{database};
+        PowerDNS::API::Schema->new(($db_config ? (config => $db_config) : ()));
+    };
+
 }
 
 # This method will run once at server start
 sub startup {
     my $self = shift;
 
-    $self->secret("asdgasdf");
+    my $config =
+      $self->plugin('JSONConfig',
+        file => $ENV{POWERDNS_API_CONFIG} || $ENV{MOJO_CONFIG} || 'powerdns-api.conf');
 
-    warn "starting\n";
+    if ($config->{secret}) {
+        $self->secret($config->{secret});
+    }
+    else {
+        warn "'secret' not configured\n";
+    }
 
     $self->plugin('BasicAuth');
 

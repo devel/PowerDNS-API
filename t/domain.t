@@ -6,9 +6,12 @@ use lib 't';
 
 use PowerDNS::API::Schema;
 
+use Test::Mojo;
+my $t = Test::Mojo->new('PowerDNS::API');
 use TestUtils;
+$TestUtils::t = $t;
 
-my $schema = PowerDNS::API::Schema->new;
+my $schema = $t->app->schema;
 
 my $domain_name = test_domain_name;
 

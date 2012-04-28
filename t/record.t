@@ -4,9 +4,13 @@ use warnings;
 use Data::Dump qw(pp);
 use lib 't';
 
-use PowerDNS::API::Schema;
+use Test::Mojo;
+my $t = Test::Mojo->new('PowerDNS::API');
+use TestUtils;
+$TestUtils::t = $t;
 
-my $schema = PowerDNS::API::Schema->new;
+my $schema = $t->app->schema;
+
 
 ok(my $domain = $schema->domain->create({ name => "record-test-" . time . ".test",
       type => 'MASTER'
