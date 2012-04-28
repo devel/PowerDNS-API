@@ -57,8 +57,8 @@ ok($r = api_call(POST => "record/$domain", { type => 'NS', name => '', content =
 $t->status_is( 409, 'conflict, wrong cas');
 
 ok($r = api_call(GET => "domain/$domain", { name => '', type => 'NS' } ), "Get NS records");
-is(scalar @{ $r->{records} }, 1, "Got one record");
-is($r->{records}->[0]->{content}, 'ns1.example.com', "Got the right record");
+is($r->{records} && scalar @{ $r->{records} }, 1, "Got one record");
+is($r->{records} && $r->{records}->[0]->{content}, 'ns1.example.com', "Got the right record");
 
 ok($r = api_call(PUT => "record/$domain/$ns_id", { type => 'NS', name => '', content => 'ns3.example.com', cas => 'wrong'}), 'replace NS record, wrong cas');
 $t->status_is( 409, 'conflict, wrong cas');

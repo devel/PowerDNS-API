@@ -20,7 +20,7 @@ ok(my $account  = setup_user, 'setup account');
 ok(my $account2 = setup_user, 'setup account 2');
 
 ok(my $r = api_call(PUT => "domain/$domain", { hostmaster => 'ask@example.com', user => $account }), 'setup new domain');
-$t->status_is(201, 'ok, created');
+$t->status_is(201, "ok, created $domain");
 ok( $r->{domain}->{soa}->{serial}, "got serial");
 
 ok($r = api_call(GET => "domain/$domain", { user => $account }), "Get domain");
@@ -33,7 +33,7 @@ ok($r = api_call(PUT => "domain/$domain", { user => $account }), 'setup duplicat
 $t->status_is(409);
 
 $domain = uc test_domain_name;
-ok($r = api_call(PUT => "domain/$domain", { user => $account }), 'setup new domain (uppercase)');
+ok($r = api_call(PUT => "domain/$domain", { user => $account }), "setup new domain (uppercase): $domain");
 $t->status_is(201);
 is($r->{domain}->{name}, lc $domain, "got setup as lowercase domain");
 
