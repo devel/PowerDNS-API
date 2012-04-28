@@ -30,6 +30,7 @@ ok(my $cas = $domain->cas, 'got cas');
 
 ok( $domain = $schema->domain->find( { name => $domain_name }));
 is( $domain->soa->serial, $serial, "serial is $serial" );
+is( $domain->soa->auth, 1, 'soa auth is 1');
 is( $domain->cas, $cas, "cas is the same");
 
 is( $domain->soa->default_ttl, 3600, "got the default ttl");

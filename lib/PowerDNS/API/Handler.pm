@@ -255,12 +255,16 @@ sub post_record {
         $data->{$f} = $self->param($f);
     }
     $data->{type} = uc $data->{type};
-    $data->{name} = lc $domain->clean_hostname( $data->{name} );
+    $data->{ordername} = $data->{name};
+    $data->{name} = $domain->clean_hostname( $data->{name} );
     unless (defined $data->{ttl}) {
         $data->{ttl} = $data->{type} eq 'NS' ? 86400 : 7200;
     }
 
     $data->{change_date} = time;
+
+    # TODO: 0 for NS and glue records, see issue #29
+    $data->{auth} = 1;
 
     my $record = $domain->add_to_records($data);
     $domain->increment_serial;

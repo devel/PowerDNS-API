@@ -30,6 +30,7 @@ sub soa {
             {   domain_id   => $self->id,
                 name        => $self->name,
                 type        => 'SOA',
+                auth        => 1,
                 change_date => time,
             }
         );

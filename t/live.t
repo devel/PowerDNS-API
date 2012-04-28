@@ -26,11 +26,18 @@ diag "Config: ", pp($db_config);
 
 my $pdns_pid = fork();
 if (!$pdns_pid) {
-   my @cmd = ($pdns_path, "--guardian=no", "--launch=gmysql", "--local-port=$port", "--socket-dir=/tmp");
-   push @cmd, "--gmysql-user=$db_config->{user}" if $db_config->{user};
-   push @cmd, "--gmysql-dbname=$db_config->{database}" if $db_config->{database};
-   exec(@cmd);
-   die "Could not exec " . join(" ", @cmd) . ": $!";
+
+    my @cmd = (
+        $pdns_path,           "--guardian=no",
+        "--local-port=$port", "--socket-dir=/tmp",
+        "--launch=gmysql",    "--gmysql-dnssec",
+    );
+
+    push @cmd, "--gmysql-user=$db_config->{user}"         if $db_config->{user};
+    push @cmd, "--gmysql-dbname=$db_config->{database}"   if $db_config->{database};
+    push @cmd, "--gmysql-password=$db_config->{password}" if $db_config->{password};
+    exec(@cmd);
+    die "Could not exec " . join(" ", @cmd) . ": $!";
 }
 
 sleep 1;
@@ -41,6 +48,9 @@ my $res = Net::DNS::Resolver->new(
     port        => $port,
     recurse     => 0
 );
+
+#$res->dnssec(1);
+#$res->cdflag(1);
 
 my $domain = test_domain_name;
 my $slave_domain = "slave-$domain";
@@ -56,11 +66,9 @@ my $r;
 ok($r = api_call(PUT => "domain/$domain", { user => $account }), 'setup new domain');
 $t->status_is(201, 'ok, created');
 
-diag(pp($r->{domain}));
-
 {
     my $a = $res->send($domain, 'SOA');
-    diag(pp($a));
+    #diag(pp($a));
 
     my $soa = ($a->answer)[0];
     isa_ok($soa, 'Net::DNS::RR', 'DNS answer is a Net::DNS::RR');
@@ -71,7 +79,15 @@ diag(pp($r->{domain}));
     is($dns_serial, $r->{domain}->{soa}->{serial}, "got serial");
 }
 
-# diag pp($r);
+ok($r = api_call(POST => "record/$domain", { type => 'A', name => 'wwW', content => '10.0.0.1' }), 'setup A record');
+$t->status_is(201, 'ok, created');
+
+#diag(pp($r->{record}));
+{
+    my $a = $res->query("WWW." . $domain, 'A');
+    is($a->answer && ($a->answer)[0]->address, '10.0.0.1', 'got correct A record back');
+}
+
 
 $account->delete;
 $account2->delete;
