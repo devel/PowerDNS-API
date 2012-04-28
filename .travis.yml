@@ -7,7 +7,7 @@ install:
 before_script:
   - mysql -uroot -e 'create database pdns;'
   - mysql -uroot pdns < docs/full-schema.sql
-script: HARNESS_IS_VERBOSE=1 prove -v -Ilib t || cat log/development.log
+script: PDNS_PATH=/usr/sbin/pdns_server HARNESS_IS_VERBOSE=1 prove -v -Ilib t || cat log/development.log
 perl:
   - "5.10"
   - "5.12"
