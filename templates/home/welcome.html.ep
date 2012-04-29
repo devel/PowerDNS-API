@@ -1,0 +1,10 @@
+% layout 'default';
+% title 'Welcome';
+<h2><%= $message %></h2>
+
+<p>
+For more information see
+the <a href="https://github.com/devel/PowerDNS-API">github project
+page</a> or
+contact <a href="http://develooper.com/contact/">Develooper LLC</a>.
+</p>

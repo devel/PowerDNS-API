@@ -32,9 +32,6 @@ sub startup {
 
     $self->plugin('BasicAuth');
 
-    # Documentation browser under "/perldoc"
-    $self->plugin('PODRenderer');
-
     # Router
     my $r  = $self->routes;
     my $ar   = $r->bridge('/')->to(action => 'auth');
@@ -57,7 +54,7 @@ sub startup {
     }
 
     # Normal route to controller
-    $r->route('/')->to('example#welcome');
+    $r->route('/')->to('home#welcome');
 }
 
 1;
