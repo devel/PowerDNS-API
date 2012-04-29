@@ -1,0 +1,9 @@
+{
+    "secret": "this-needs-to-be-changed-foo!",
+    "database": {
+        "database": "pdns",
+        "user": "root",
+        "password": null,
+        "host": "localhost"
+    }
+}
