@@ -1,6 +1,5 @@
 package PowerDNS::API;
 use Mojo::Base 'Mojolicious';
-#use PowerDNS::API::Handler::API;
 use PowerDNS::API::Schema;
 use Data::Dump ();
 
@@ -85,7 +84,7 @@ L<http://github.com/devel/PowerDNS-API>
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2011 Ask Bjørn Hansen, all rights reserved.
+Copyright 2011-2012 Ask Bjørn Hansen, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
