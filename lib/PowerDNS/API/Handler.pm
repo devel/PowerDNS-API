@@ -255,7 +255,7 @@ sub post_record {
         $data->{$f} = $self->param($f);
     }
     $data->{type} = uc $data->{type};
-    $data->{ordername} = $data->{name};
+    $data->{ordername} = lc $data->{name};
     $data->{name} = $domain->clean_hostname( $data->{name} );
     unless (defined $data->{ttl}) {
         $data->{ttl} = $data->{type} eq 'NS' ? 86400 : 7200;

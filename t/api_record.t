@@ -40,6 +40,8 @@ ok($r->{record}->{id}, 'got an ID');
 is($r->{record}->{content}, '10.0.0.1', 'correct content');
 is($r->{record}->{name}, 'www', 'return lower-case name');
 is($r->{record}->{address}, '10.0.0.1', 'A record also has "address"');
+ok(my $record = $schema->record->find( $r->{record}->{id} ), "fetch record from db");
+is($record->ordername, $r->{record}->{name}, "ordername is the same as name");
 
 my $id = $r->{record}->{id};
 
