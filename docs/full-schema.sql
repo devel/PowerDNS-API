@@ -97,7 +97,7 @@ CREATE TABLE `records` (
   `domain_id` int(11) DEFAULT NULL,
   `name` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
   `type` varchar(10) DEFAULT NULL,
-  `content` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  `content` varchar(64000) CHARACTER SET latin1 DEFAULT NULL,
   `ttl` int(11) DEFAULT NULL,
   `prio` int(11) DEFAULT NULL,
   `change_date` int(11) DEFAULT NULL,
