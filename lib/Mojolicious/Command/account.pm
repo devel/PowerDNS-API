@@ -1,5 +1,5 @@
 package Mojolicious::Command::account;
-use Mojo::Base 'Mojo::Command';
+use Mojo::Base 'Mojolicious::Command';
 
 has description => "Setup a new user account/password.\n";
 has usage       => "usage: $0 account [username] [password]\n";
