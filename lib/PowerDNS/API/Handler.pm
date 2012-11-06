@@ -89,7 +89,7 @@ sub put_domain {
 
     my $account = $self->stash('account') or die $self->render_error(401, "unauthorized");
 
-    my $name = lc $self->stash('domain') or die $self->render_error(400);
+    my $name = lc $self->stash('domain') or die $self->render_error(400, 'no domain name');
 
     my $txn = $self->schema->txn_scope_guard;
 
@@ -135,15 +135,16 @@ sub put_domain {
 
 sub render_error {
     my ($self, $status, $error) = @_;
+    warn "ERROR: ", defined $error  ? $error : "undefedin";
     return [ { error => $error }, $status ];
 }
 
 sub post_domain {
     my $self = shift;
 
-    my $account = $self->stash('account') or die $self->render_error(401, "unauthorized");
+    my $account = $self->stash('account') or die $self->render_error(401, 'unauthorized');
 
-    my $domain_name = $self->stash('domain') or die $self->render_error(400);
+    my $domain_name = $self->stash('domain') or die $self->render_error(400, 'no domain name');
 
     my $txn = $self->schema->txn_scope_guard;
 
