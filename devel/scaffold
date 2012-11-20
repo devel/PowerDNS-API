@@ -1,12 +1,15 @@
 #!/bin/sh
 
-PERL5LIB="$PERL5LIB:./lib";
+export PERL5LIB="$PERL5LIB:./lib";
 
 mesoderm \
   --user root \
   --dsn  'dbi:mysql:database=pdns;host=localhost;mysql_enable_utf8=1' \
   --schema_class PowerDNS::API::Schema \
-  --scaffold_class PowerDNS::API::Schema::Scaffold
+  --scaffold_class PowerDNS::API::Schema::Scaffold \
+  --tidy
+
+
   
 
 
