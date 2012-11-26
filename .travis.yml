@@ -3,7 +3,7 @@ before_install:
   - curl -o /tmp/pdns.deb http://mirrors.develooper.com/ask/pdns/pdns-static_3.1-rc2.20120414.2567-1_i386.deb
   - sudo dpkg -i /tmp/pdns.deb
 install:
-  - cpanm -q -n < .travis.dependencies
+  - cpanm -q -n < .travis.dependencies || cat ~/.cpanm/build.log
 before_script:
   - mysql -uroot -e 'create database pdns;'
   - mysql -uroot pdns < docs/full-schema.sql

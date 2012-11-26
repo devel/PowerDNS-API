@@ -7,7 +7,6 @@ DBIx::Class::Helper::Row::ToJSON
 DBIx::Class::InflateColumn::Serializer
 ExtUtils::MakeMaker
 JSON
-local::lib
 Mojolicious
 Mojolicious::Plugin::BasicAuth
 Moose
