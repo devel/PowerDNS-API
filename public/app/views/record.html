@@ -1,0 +1,17 @@
+<h2>{{record.type}}: {{record.name}}</h2>
+
+ttl: {{record.ttl}}
+
+<form class="form-inline">
+    <input type="text" class="input-small" ng-model="record.name" placeholder="Name">
+    {{ record.type }}
+    <input type="text" class="input-small" ng-model="record.ttl" placeholder="TTL">
+
+    <!-- make this record type specific -->
+    <input type="text" class="input-large" ng-model="record.content" placeholder="Content">
+
+    <button ng-click="save()" ng-disabled="isClean() || myForm.$invalid"
+        class="btn btn-primary">{{ saveState() }}
+    </button>
+
+</form>

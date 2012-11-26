@@ -1,0 +1,50 @@
+<table class="table table-striped table-hover table-condensed">
+<caption>Domains</caption>
+<thead>
+	<tr>
+		<th>Name</th>
+		<th>Master/slave</th>
+		<th>Serial</th>
+		<th></th>
+	</tr>
+</thead>
+<tbody>
+	<tr ng-repeat="domain in domains">
+		<td>{{domain.name}}</td>
+		<td class="domain-type">{{domain.type}}</td>
+		<td>{{domain.soa.serial}}</td>
+		<td>
+		    <a href="#/domain/{{domain.name}}" class="btn btn-mini">
+		   		View
+        	</a>
+		</td>
+	</tr>
+</tbody>
+</table>
+
+
+<!--
+	cas: "9024522572"
+	id: "1378"
+	master: null
+	name: "foo-1343951428.test"
+	type: "MASTER"
+	soa: Object
+		auth: "1"
+		change_date: "1343951428"
+		content: "ns hostmaster 10 10800 3600 604800 3600"
+		default_ttl: "3600"
+		domain_id: "1378"
+		expire: "604800"
+		hostmaster: "hostmaster"
+		id: "1039823"
+		name: ""
+		ordername: null
+		primary: "ns"
+		prio: null
+		refresh: "10800"
+		retry: "3600"
+		serial: "10"
+		ttl: "3600"
+		type: "SOA"
+-->

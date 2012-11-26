@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="pdns">
+  <head>
+    <meta charset="utf-8">
+    <title>PowerDNS API Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="http://st.pimg.net/cdn/libs/bootstrap/2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px;  /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+    <link href="http://st.pimg.net/cdn/libs/bootstrap/2/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="css/pdns.css" rel="stylesheet">
+
+    <!-- for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">DNS</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#domains">Domains</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="wrap">
+        <!-- Begin page content -->
+        <div class="container">
+          <div class="page-header">
+              <h1>PowerDNS API UI</h1>
+          </div>
+          <div ng-view></div>
+        </div>
+      </div>
+
+    <script src="http://st.pimg.net/cdn/libs/jquery/1.8/jquery.min.js"></script>
+    <script src="http://st.pimg.net/cdn/libs/underscore/1.4/underscore-min.js"></script>
+    <script src="http://st.pimg.net/cdn/libs/bootstrap/2/js/bootstrap.min.js"></script>
+    <script src="http://st.pimg.net/cdn/libs/moment.js/1.7/moment.min.js"></script>
+
+    <script src="http://st.pimg.net/cdn/libs/angularjs/1.0.2/angular.js"></script>
+    <script src="http://st.pimg.net/cdn/libs/angularjs/1.0.2/angular-resource.js?4"></script>
+
+    <script src="js/pdns.js"></script>
+    <script src="js/controllers.js"></script>
+
+
+
+  </body>
+</html>

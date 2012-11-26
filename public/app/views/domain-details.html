@@ -1,0 +1,54 @@
+<h2>{{domain.name}}</h2>
+<div>
+{{domain.type}} - serial: {{domain.soa.serial}}
+</div>
+
+<table>
+<thead>
+	<tr>
+		<th>Name</th>
+		<th>Master/slave</th>
+		<th>Serial</th>
+		<th></th>
+	</tr>
+</thead>
+<tbody>
+	<tr ng-repeat="r in records">
+		<td>{{r.name || '@'}}</td>
+		<td>{{r.type}}</td>
+		<td>{{r.ttl}}</td>
+		<td>{{r.content}}</td>
+		<td>
+		    <a href="#/domain/{{domain.name}}/{{r.id}}" ng-click="set_cache(r.id)" class="btn btn-mini">
+		   		Editx
+        	</a>
+		</td>
+	</tr>
+</tbody>
+</table>	
+
+<!--
+	cas: "9024522572"
+	id: "1378"
+	master: null
+	name: "foo-1343951428.test"
+	type: "MASTER"
+	soa: Object
+		auth: "1"
+		change_date: "1343951428"
+		content: "ns hostmaster 10 10800 3600 604800 3600"
+		default_ttl: "3600"
+		domain_id: "1378"
+		expire: "604800"
+		hostmaster: "hostmaster"
+		id: "1039823"
+		name: ""
+		ordername: null
+		primary: "ns"
+		prio: null
+		refresh: "10800"
+		retry: "3600"
+		serial: "10"
+		ttl: "3600"
+		type: "SOA"
+-->
