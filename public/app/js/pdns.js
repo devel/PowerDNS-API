@@ -44,7 +44,7 @@ angular.module('pdnsServices', []).
         // $rootScope.recordCache = cache;
         return function(record) {
             var Record = {
-                $save: function(cb) {                    
+                $save: function(cb) {
                     var self = this;
 
                     // might make more sense to use _.pick() with an explicit list
@@ -63,7 +63,7 @@ angular.module('pdnsServices', []).
                         }
                         return response.data;
                     });
-                    return promise;                
+                    return promise;
                 }
             };
             _.extend(Record, record);
@@ -95,3 +95,5 @@ angular.module('filters', []).
                 return ts ? moment(ts).format("MMMM Do YYYY") : '';
             };
         });
+
+

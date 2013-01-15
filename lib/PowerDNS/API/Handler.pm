@@ -17,8 +17,10 @@ sub handle_request {
     catch {
         my $e = $_;
         if (ref $e eq 'ARRAY' and ref $e->[0] eq 'HASH' and $e->[0]->{error}) {
+        $self->app->log->error(pp($e));
             return $self->render_json($e->[0], ( $e->[1] || 500 ));
         }
+        $self->app->log->error($e);
         die $e;
     }
 }

@@ -22,6 +22,8 @@ sub startup {
       $self->plugin('JSONConfig',
         file => $ENV{POWERDNS_API_CONFIG} || $ENV{MOJO_CONFIG} || 'powerdns-api.conf');
 
+    $self->plugin(AccessLog => {log => \*STDERR});
+
     if ($config->{secret}) {
         $self->secret($config->{secret});
     }
@@ -54,6 +56,8 @@ sub startup {
 
     # Normal route to controller
     $r->route('/')->to('home#welcome');
+    $r->route('/app')->to('home#ui');
+#    $r->route('/app/')->to('home#ui');
 }
 
 1;

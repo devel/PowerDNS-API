@@ -38,5 +38,4 @@ sub auth {
     return;
 }
 
-
 1;
