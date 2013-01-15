@@ -10,6 +10,7 @@ JSON
 local::lib
 Mojolicious
 Mojolicious::Plugin::BasicAuth
+Mojolicious::Plugin::AccessLog
 Moose
 namespace::clean
 Test::More
