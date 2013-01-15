@@ -9,6 +9,7 @@ ExtUtils::MakeMaker
 JSON
 Mojolicious
 Mojolicious::Plugin::BasicAuth
+Mojolicious::Plugin::AccessLog
 Moose
 namespace::clean
 Test::More
