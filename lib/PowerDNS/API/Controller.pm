@@ -13,7 +13,7 @@ sub render_json {
     my ($self, $data, $status) = @_;
     $status ||= 200;
     $self->res->headers->content_type('application/json');
-    $self->render_text($json->encode($data), status => $status);
+    $self->render(json => $data, status => $status);
 }
 
 sub auth {
