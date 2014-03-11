@@ -40,6 +40,7 @@ sub startup {
         ['domain/*domain' => 'POST' => 'post_domain'],
         ['domain/*domain' => 'GET'  => 'get_domain'],
         ['domain/*domain' => 'PUT'  => 'put_domain'],
+        ['domain/*id' => 'DELETE'  => 'delete_domain'],
 
         ['record/*domain'     => 'POST' => 'post_record'],
         ['record/*domain/*id' => 'PUT'  => 'put_record'],
