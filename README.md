@@ -19,3 +19,8 @@ For the 'CAS' API system to work properly, the system expects the
 transaction isolation level of MySQL to be 'REPEATABLE READ' (this is
 the default).
 
+
+
+## New Command Implementation -  Delete domain
+
+ example curl -X DELETE -u username:password http://apidomain/api/domain/:id
