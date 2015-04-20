@@ -174,6 +174,31 @@ sub post_domain {
     return $self->render_json({ domain => $domain });
 }
 
+sub delete_domain {
+    my $self = shift;
+
+    my $account = $self->stash('account') or die $self->render_error(401, 'unauthorized');
+
+    my $domain_id = $self->stash('id') or die $self->render_error(400, 'no domain id');
+
+    my $txn = $self->schema->txn_scope_guard;
+
+    my $domain = $self->schema->domain->find({ id => $domain_id }, { for => 'update' })
+      or die $self->render_error("domain not found", 404);
+
+    die $self->render_error(401, "unauthorized")
+      unless $account->has_access($domain);
+
+    $self->_check_cas($domain);
+
+    
+    $domain->delete;
+
+    $txn->commit;
+
+    return $self->render_json({ message => "domain deleted"}, 205)
+}
+
 sub put_record {
     my $self = shift;
 
